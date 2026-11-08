@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinity Mobile RP - Portal</title>
+<style>
+:root {
+--primary: #6366f1;
+--bg: #0f172a;
+--card: #1e293b;
+--text: #f8fafc;
+--border: #334155;
+}
+body {
+background: var(--bg);
+color: var(--text);
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 15px;
+}
+.container { max-width: 800px; margin: 0 auto; }
+.card { background: var(--card); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--border); }
+h1, h2 { text-align: center; color: #fff; }
+.btn {
+display: block; width: 100%; background: var(--primary); color: white;
+padding: 12px; border: none; border-radius: 6px; font-weight: bold;
+cursor: pointer; text-align: center; text-decoration: none; margin-top: 10px;
+box-sizing: border-box;
+}
+.btn-red { background: #ef4444; }
+.btn-green { background: #10b981; }
+label { display: block; margin-top: 12px; font-weight: bold; }
+select, input, textarea {
+width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px;
+border: 1px solid var(--border); background: var(--bg); color: white; box-sizing: border-box;
+}
+textarea { height: 80px; }
+.hidden { display: none !important; }
+.report-item { background: rgba(15, 23, 42, 0.7); padding: 12px; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border); }
+.badge { padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+.badge-pending { background: #eab308; color: #000; }
+.badge-accepted { background: #10b981; color: #fff; }
+.badge-rejected { background: #ef4444; color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Infinity Mobile RP</h1>
+
+<!-- Game Download Button -->
+<div class="card" style="text-align: center;">
+<a href="https://www.dropbox.com/scl/fi/kygvl9xizmso7cmn1kbvl/Infinity-Mobile-RP.apk?rlkey=78vyq949lt9itvv9cn1dnqest&st=um3ltccj&dl=1" class="btn" target="_blank">Download Game APK</a>
+</div>
+
+<!-- 24-Hour Public Complaint Feed -->
+<div class="card">
+<h2>Recent Reports (Last 24 Hours)</h2>
+<div id="publicFeed">Loading reports...</div>
+</div>
+
+<!-- Submit Complaint Form -->
+<div class="card">
+<h2>Submit Complaint</h2>
+<form id="compForm">
+<label>Complaint Type</label>
+<select id="typeSelect" onchange="toggleForm()" required>
+<option value="">-- Select Type --</option>
+<option value="technical">Technical Issue</option>
+<option value="player">Complain Against Player</option>
+</select>
+
+<div id="techFields" class="hidden">
+<label>Your Name</label>
+<input type="text" id="tName" placeholder="Your full name">
+<label>Description</label>
+<textarea id="tDesc" placeholder="Describe issue..."></textarea>
+</div>
+
+<div id="playerFields" class="hidden">
+<label>Your In-Game Name</label>
+<input type="text" id="pYou" placeholder="Your name">
+<label>Accused Player Name</label>
+<input type="text" id="pTarget" placeholder="Target player name">
+<label>Rule Violated</label>
+<input type="text" id="pRule" placeholder="e.g. 2.1GR">
+<label>Situation Details</label>
+<textarea id="pSit" placeholder="Describe situation..."></textarea>
+</div>
+
+<div id="evidenceField" class="hidden">
+<label>Evidence Link (YouTube/Imgur)</label>
+<input type="url" id="evUrl" placeholder="https://youtube.com/...">
+</div>
+
+<button type="submit" class="btn" style="margin-top: 15px;">Submit Report</button>
+</form>
+</div>
+
+<!-- Admin Login Section -->
+<div class="card" id="loginCard">
+<h2>Admin Login</h2>
+<label>Admin Gmail</label>
+<input type="email" id="aEmail" placeholder="Enter Gmail">
+<label>Password</label>
+<input type="password" id="aPass" placeholder="Enter Password">
+<button type="button" class="btn" onclick="adminLogin()">Login to Dashboard</button>
+</div>
+
+<!-- Protected Admin Dashboard Section -->
+<div class="card hidden" id="dashCard">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<h2>Admin Dashboard</h2>
+<button type="button" class="btn btn-red" style="width: auto; padding: 5px 12px;" onclick="adminLogout()">Logout</button>
+</div>
+<div id="adminList"></div>
+</div>
+
+<!-- Fix Memory Clear Button -->
+<div style="text-align: center; margin-top: 20px;">
+<button type="button" onclick="clearSiteCache()" style="background: transparent; color: #64748b; border: 1px solid #475569; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;">Fix / Reset Stuck Data</button>
+</div>
+</div>
+
+<script>
+const admins = {
+"rakibbot592@gmail.com": "0507",
+"hackonlyuse1@gmail.com": "Anything"
+};
+
+function toggleForm() {
+const val = document.getElementById('typeSelect').value;
+const tech = document.getElementById('techFields');
+const player = document.getElementById('playerFields');
+const ev = document.getElementById('evidenceField');
+
+tech.classList.add('hidden');
+player.classList.add('hidden');
+ev.classList.add('hidden');
+
+if (val === 'technical') {
+tech.classList.remove('hidden');
+ev.classList.remove('hidden');
+} else if (val === 'player') {
+player.classList.remove('hidden');
+ev.classList.remove('hidden');
+}
+}
+
+document.getElementById('compForm').addEventListener('submit', function(e) {
+e.preventDefault();
+const type = document.getElementById('typeSelect').value;
+if (!type) return alert('Please select a complaint type!');
+
+let report = {
+id: Date.now(),
+time: Date.now(),
+dateStr: new Date().toLocaleString(),
+type: type,
+status: 'Pending',
+comment: '',
+url: document.getElementById('evUrl').value
+};
+
+if (type === 'technical') {
+report.title = "Tech Issue: " + document.getElementById('tName').value;
+report.desc = document.getElementById('tDesc').value;
+} else {
+report.title = "Player Report: " + document.getElementById('pYou').value + " vs " + document.getElementById('pTarget').value;
+report.desc = "Rule: " + document.getElementById('pRule').value + " | " + document.getElementById('pSit').value;
+}
+
+let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+list.push(report);
+localStorage.setItem('infinityReports', JSON.stringify(list));
+
+alert('Report Submitted Successfully!');
+this.reset();
+toggleForm();
+loadPublicFeed();
+});
+
+function loadPublicFeed() {
+const feed = document.getElementById('publicFeed');
+feed.innerHTML = '';
+let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+const now = Date.now();
+
+// 24 Hours Auto Filter
+list = list.filter(r => (now - r.time) < 86400000);
+localStorage.setItem('infinityReports', JSON.stringify(list));
+
+if (list.length === 0) {
+feed.innerHTML = '<p style="text-align:center; color:#94a3b8;">No reports submitted in the last 24 hours.</p>';
+return;
+}
+
+list.slice().reverse().forEach(r => {
+let badgeClass = r.status === 'Accepted' ? 'badge-accepted' : (r.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
+let div = document.createElement('div');
+div.className = 'report-item';
+div.innerHTML = &lt;div style="display:flex; justify-content:space-between; align-items:center;"&gt; &lt;strong&gt;${r.title}</strong>
+<span class="badge ${badgeClass}"&gt;${r.status}</span>
+</div>
+<p style="margin:5px 0; font-size:0.9rem;">${r.desc}&lt;/p&gt; ${r.url ? <a href="${r.url}" target="_blank" style="color:#818cf8; font-size:0.85rem;">View Evidence</a>: ''} &lt;div style="font-size:0.75rem; color:#94a3b8; margin-top:5px;"&gt;Submitted: ${r.dateStr}</div>
+${r.comment ?<div style="background:rgba(99,102,241,0.2); padding:6px; margin-top:5px; border-left:3px solid var(--primary); font-size:0.85rem;"><strong>Admin Response:</strong> ${r.comment}&lt;/div> : ''}
+`;
+feed.appendChild(div);
+});
+}
+
+function adminLogin() {
+const email = document.getElementById('aEmail').value.trim().toLowerCase();
+const pass = document.getElementById('aPass').value;
+
+if (admins[email] && admins[email] === pass) {
+localStorage.setItem('adminAuthSession', 'active');
+showDash();
+} else {
+alert('Wrong Admin Email or Password!');
+}
+}
+
+function showDash() {
+document.getElementById('loginCard').classList.add('hidden');
+document.getElementById('dashCard').classList.remove('hidden');
+loadAdminList();
+}
+
+function adminLogout() {
+localStorage.removeItem('adminAuthSession');
+document.getElementById('dashCard').classList.add('hidden');
+document.getElementById('loginCard').classList.remove('hidden');
+}
+
+function loadAdminList() {
+const box = document.getElementById('adminList');
+box.innerHTML = '';
+let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+
+if (list.length === 0) {
+box.innerHTML = '<p style="text-align:center; margin-top:10px;">No active reports to review.</p>';
+return;
+}
+
+list.slice().reverse().forEach((r, idx) => {
+let realIdx = list.length - 1 - idx;
+let div = document.createElement('div');
+div.className = 'report-item';
+div.innerHTML = &lt;strong&gt;${r.title}</strong> ({r.desc}</p>
+<input type="text" id="comm_{r.comment || ''}" placeholder="Write admin comment..." style="margin-bottom:5px;">
+<div style="display:flex; gap:5px;">
+<button type="button" class="btn btn-green" style="padding:6px;" onclick="updateStatus({realIdx}, 'Rejected')">Reject</button>
+<button type="button" class="btn btn-red" style="background:#475569; padding:6px;" onclick="deleteReport(${realIdx})"&gt;Delete&lt;/button&gt; &lt;/div&gt;;
+box.appendChild(div);
+});
+}
+
+function updateStatus(idx, status) {
+let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+const comment = document.getElementById(comm_${idx}`).value;
+list[idx].status = status;
+list[idx].comment = comment;
+localStorage.setItem('infinityReports', JSON.stringify(list));
+alert('Status Updated to ' + status);
+loadAdminList();
+loadPublicFeed();
+}
+
+function deleteReport(idx) {
+let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+list.splice(idx, 1);
+localStorage.setItem('infinityReports', JSON.stringify(list));
+loadAdminList();
+loadPublicFeed();
+}
+
+function clearSiteCache() {
+localStorage.clear();
+alert('Site cache cleared successfully! Reloading...');
+location.reload();
+}
+
+window.onload = function() {
+loadPublicFeed();
+if (localStorage.getItem('adminAuthSession') === 'active') {
+showDash();
+}
+}
+</script>
+
+</body>
+</html>
