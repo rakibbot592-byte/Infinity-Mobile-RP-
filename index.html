@@ -1,490 +1,689 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Infinity Mobile RP - Official Portal</title>
-<style>
-:root {
---bg-color: #0b0f19;
---card-bg: rgba(26, 22, 45, 0.75);
---border-color: #4c1d95;
---accent-yellow: #facc15;
---accent-purple: #8b5cf6;
---text-main: #f8fafc;
---text-muted: #94a3b8;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-body {
-background: linear-gradient(rgba(11, 15, 25, 0.85), rgba(11, 15, 25, 0.95)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
-background-size: cover;
-color: var(--text-main);
-min-height: 100vh;
-padding: 10px;
-}
-.container { max-width: 1000px; margin: 0 auto; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Mobile RP</title>
+    <style>
+        :root {
+            --card-bg: rgba(15, 12, 35, 0.9);
+            --border-color: #6d28d9;
+            --accent-yellow: #facc15;
+            --accent-purple: #9333ea;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background: linear-gradient(rgba(11, 15, 25, 0.65), rgba(11, 15, 25, 0.8)), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 8px;
+        }
+        .container { max-width: 950px; margin: 0 auto; }
+        
+        /* Top Navigation Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 100;
+        }
+        .header-title { font-size: 0.88rem; font-weight: bold; color: #fff; white-space: nowrap; }
+        .header-menu { 
+            display: flex; 
+            gap: 5px; 
+            align-items: center; 
+            overflow-x: auto; 
+            max-width: 100%;
+            scrollbar-width: none;
+        }
+        .header-menu::-webkit-scrollbar { display: none; }
+        
+        .nav-link { 
+            background: none; 
+            border: none; 
+            color: var(--text-muted); 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 0.78rem; 
+            padding: 5px 8px; 
+            border-radius: 5px; 
+            white-space: nowrap; 
+        }
+        .nav-link.active { color: #fff; background: rgba(147, 51, 234, 0.5); border: 1px solid var(--accent-purple); }
+        
+        /* Three-dot menu dropdown */
+        .menu-dropdown { position: relative; display: inline-block; flex-shrink: 0; }
+        .dot-btn { background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; padding: 0 5px; }
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 100%; background: #1e1b4b;
+            min-width: 150px; box-shadow: 0px 8px 16px rgba(0,0,0,0.6);
+            border: 1px solid var(--accent-purple); border-radius: 8px; z-index: 1000;
+        }
+        .dropdown-content button {
+            color: white; padding: 10px 14px; display: block;
+            background: none; border: none; width: 100%; text-align: left; cursor: pointer; font-size: 0.85rem;
+        }
+        .dropdown-content button:hover { background: rgba(147, 51, 234, 0.4); }
+        .show { display: block; }
 
-/* Top Navigation Header */
-.top-header {
-display: flex;
-justify-content: space-between;
-align-items: center;
-background: var(--card-bg);
-backdrop-filter: blur(10px);
-padding: 12px 20px;
-border-radius: 12px;
-border: 1px solid var(--border-color);
-margin-bottom: 20px;
-}
-.header-title { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; color: #fff; }
-.header-menu { display: flex; gap: 15px; align-items: center; }
-.nav-link { background: none; border: none; color: var(--text-muted); font-weight: bold; cursor: pointer; font-size: 0.95rem; padding: 5px 10px; border-radius: 6px; }
-.nav-link.active { color: #fff; background: rgba(139, 92, 246, 0.3); border: 1px solid var(--accent-purple); }
+        /* Hero & Game Info Section */
+        .hero-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+        .game-info { text-align: left; margin-bottom: 15px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+        .game-info h3 { color: #fff; margin-bottom: 6px; font-size: 1.1rem; }
 
-/* Three-dot menu container */
-.menu-dropdown { position: relative; display: inline-block; }
-.dot-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 0 5px; }
-.dropdown-content {
-display: none; position: absolute; right: 0; background: #1e1b4b;
-min-width: 160px; box-shadow: 0px 8px 16px rgba(0,0,0,0.5);
-border: 1px solid var(--accent-purple); border-radius: 8px; z-index: 10;
-}
-.dropdown-content button {
-color: white; padding: 12px 16px; text-decoration: none; display: block;
-background: none; border: none; width: 100%; text-align: left; cursor: pointer; font-size: 0.9rem;
-}
-.dropdown-content button:hover { background: rgba(139, 92, 246, 0.4); }
-.show { display: block; }
+        .download-btn {
+            background: var(--accent-yellow);
+            color: #000;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.4);
+            margin-bottom: 5px;
+            transition: 0.2s;
+        }
+        .download-btn:hover { transform: scale(1.02); background: #fde047; }
 
-/* Hero & Game Info Section */
-.hero-section {
-background: var(--card-bg);
-backdrop-filter: blur(10px);
-border: 1px solid var(--border-color);
-border-radius: 12px;
-padding: 30px 20px;
-text-align: center;
-margin-bottom: 20px;
-}
-.download-btn {
-background: var(--accent-yellow);
-color: #000;
-padding: 14px 30px;
-font-size: 1.1rem;
-font-weight: bold;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-text-decoration: none;
-display: inline-block;
-box-shadow: 0 4px 15px rgba(250, 204, 21, 0.4);
-margin-bottom: 20px;
-transition: 0.2s;
-}
-.download-btn:hover { transform: scale(1.02); background: #fde047; }
-.game-info { text-align: left; margin-top: 15px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
-.game-info h3 { color: #fff; margin-bottom: 8px; font-size: 1.1rem; }
+        /* Complaints Layout */
+        .complaints-wrapper {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 12px;
+        }
+        @media (max-width: 768px) {
+            .complaints-wrapper { grid-template-columns: 1fr; }
+        }
+        .sidebar-menu { display: flex; flex-direction: column; gap: 6px; }
+        .sidebar-btn {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 10px 12px;
+            text-align: left;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .sidebar-btn.active-tab, .sidebar-btn:hover {
+            background: var(--accent-yellow);
+            color: #000;
+            border-color: var(--accent-yellow);
+        }
 
-/* Complaints Layout matching user screenshots */
-.complaints-wrapper {
-display: grid;
-grid-template-columns: 240px 1fr;
-gap: 15px;
-}
-@media (max-width: 768px) {
-.complaints-wrapper { grid-template-columns: 1fr; }
-}
-.sidebar-menu {
-display: flex;
-flex-direction: column;
-gap: 8px;
-}
-.sidebar-btn {
-background: var(--card-bg);
-border: 1px solid var(--border-color);
-color: var(--text-muted);
-padding: 12px 15px;
-text-align: left;
-border-radius: 8px;
-font-weight: bold;
-cursor: pointer;
-transition: 0.2s;
-}
-.sidebar-btn.active-tab, .sidebar-btn:hover {
-background: var(--accent-yellow);
-color: #000;
-border-color: var(--accent-yellow);
-}
+        .content-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 380px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
 
-.content-panel {
-background: var(--card-bg);
-backdrop-filter: blur(10px);
-border: 1px solid var(--border-color);
-border-radius: 12px;
-padding: 20px;
-min-height: 400px;
-}
+        /* Commands Section Styling */
+        .faction-category-title {
+            color: var(--accent-yellow);
+            font-size: 1rem;
+            margin: 12px 0 8px 0;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 4px;
+        }
+        .faction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .faction-card {
+            background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            transition: 0.2s;
+        }
+        .faction-card:hover {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+        }
+        .command-box {
+            background: rgba(11, 15, 25, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
 
-/* Form styling */
-.form-group { margin-bottom: 15px; }
-.form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted); }
-.form-control {
-width: 100%; background: rgba(11, 15, 25, 0.6);
-border: 1px solid var(--border-color); border-radius: 6px;
-padding: 10px; color: #fff; font-size: 0.95krem;
-}
-textarea.form-control { height: 100px; resize: none; }
+        /* Form styling */
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 4px; font-size: 0.85rem; color: var(--text-muted); }
+        .form-control {
+            width: 100%; background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--border-color); border-radius: 6px;
+            padding: 8px; color: #fff; font-size: 0.9rem;
+        }
+        textarea.form-control { height: 90px; resize: none; }
+        
+        /* Feed items */
+        .feed-card {
+            background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .feed-header { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--accent-yellow); margin-bottom: 4px; }
+        .feed-desc { font-size: 0.85rem; margin-bottom: 6px; color: var(--text-main); }
+        .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+        .badge-pending { background: #eab308; color: #000; }
+        .badge-reviewed { background: #10b981; color: #fff; }
+        .badge-rejected { background: #ef4444; color: #fff; }
 
-/* Feed items */
-.feed-card {
-background: rgba(11, 15, 25, 0.6);
-border: 1px solid var(--border-color);
-border-radius: 8px;
-padding: 15px;
-margin-bottom: 12px;
-}
-.feed-header { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--accent-yellow); margin-bottom: 5px; }
-.feed-desc { font-size: 0.9rem; margin-bottom: 8px; color: var(--text-main); }
-.badge { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
-.badge-pending { background: #eab308; color: #000; }
-.badge-reviewed { background: #10b981; color: #fff; }
-.badge-rejected { background: #ef4444; color: #fff; }
-
-.hidden { display: none !important; }
-.btn-submit {
-background: var(--accent-yellow); color: #000; font-weight: bold;
-border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%;
-}
-</style>
+        .hidden { display: none !important; }
+        .btn-submit {
+            background: var(--accent-yellow); color: #000; font-weight: bold;
+            border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.95rem;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-<!-- Top Header -->
-<div class="top-header">
-<div class="header-title">INFINITY MOBILE RP</div>
-<div class="header-menu">
-<button class="nav-link active" onclick="switchView('portal')">HOME</button>
-<button class="nav-link" onclick="switchView('complaints')">COMPLAINTS</button>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="header-title">INFINITY MOBILE RP</div>
+        <div class="header-menu">
+            <button class="nav-link active" onclick="switchView('portal')">HOME</button>
+            <button class="nav-link" onclick="switchView('complaints')">COMPLAINTS</button>
+            <button class="nav-link" onclick="switchView('commands')">COMMANDS</button>
+            
+            <!-- Three Dot Admin Menu -->
+            <div class="menu-dropdown">
+                <button class="dot-btn" onclick="toggleDropdown(event)">⋮</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <button onclick="openAdminLogin()">Admin Panel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Three Dot Admin Menu -->
-<div class="menu-dropdown">
-<button class="dot-btn" onclick="toggleDropdown()">⋮</button>
-<div id="myDropdown" class="dropdown-content">
-<button onclick="openAdminLogin()">Admin Panel</button>
-</div>
-</div>
-</div>
-</div>
+    <!-- Main Portal View -->
+    <div id="portalView">
+        <div class="hero-section">
+            <div class="game-info">
+                <h3>About Infinity Mobile RP</h3>
+                <p>Welcome to Infinity Mobile RP – the ultimate mobile roleplaying experience. Immerse yourself in a living, breathing virtual world where your choices shape your destiny. Become a dedicated law enforcement officer protecting the streets, join criminal syndicates to build your empire, launch your own business enterprises, own luxurious real estate, achieve ultimate wealth, and live a rich lifestyle with thousands of active players.</p>
+            </div>
 
-<!-- Main Portal View -->
-<div id="portalView">
-<div class="hero-section">
-<a href="https://www.dropbox.com/scl/fi/kygvl9xizmso7cmn1kbvl/Infinity-Mobile-RP.apk?rlkey=78vyq949lt9itvv9cn1dnqest&st=um3ltccj&dl=1" class="download-btn" target="_blank">DOWNLOAD GAME APK</a>
+            <a href="https://www.dropbox.com/scl/fi/kygvl9xizmso7cmn1kbvl/Infinity-Mobile-RP.apk?rlkey=78vyq949lt9itvv9cn1dnqest&st=um3ltccj&dl=1" class="download-btn" target="_blank">DOWNLOAD GAME APK</a>
+        </div>
+    </div>
 
-<div class="game-info">
-<h3>About Infinity Mobile RP</h3>
-<p>Welcome to Infinity Mobile RP – the ultimate mobile roleplaying experience. Immerse yourself in a living, breathing virtual world where your choices shape your destiny. Become a dedicated law enforcement officer protecting the streets, join criminal syndicates to build your empire, launch your own business enterprises, own luxurious real estate, achieve ultimate wealth, and live a rich lifestyle with thousands of active players.</p>
-</div>
-</div>
-</div>
+    <!-- Complaints System View -->
+    <div id="complaintsView" class="hidden">
+        <div class="complaints-wrapper">
+            <!-- Sidebar Menu -->
+            <div class="sidebar-menu">
+                <button class="sidebar-btn active-tab" onclick="setCompTab('create')">CREATE COMPLAINT</button>
+                <button class="sidebar-btn" onclick="setCompTab('all')">ALL COMPLAINTS</button>
+                <button class="sidebar-btn" onclick="setCompTab('not_reviewed')">NOT REVIEWED</button>
+                <button class="sidebar-btn" onclick="setCompTab('reviewed')">REVIEWED</button>
+            </div>
 
-<!-- Complaints System View -->
-<div id="complaintsView" class="hidden">
-<div class="complaints-wrapper">
-<!-- Sidebar Menu (Matching Screenshot) -->
-<div class="sidebar-menu">
-<button class="sidebar-btn active-tab" onclick="setCompTab('create')">CREATE COMPLAINT</button>
-<button class="sidebar-btn" onclick="setCompTab('all')">ALL COMPLAINTS</button>
-<button class="sidebar-btn" onclick="setCompTab('not_reviewed')">NOT REVIEWED</button>
-<button class="sidebar-btn" onclick="setCompTab('reviewed')">REVIEWED</button>
-</div>
+            <!-- Content Area -->
+            <div class="content-panel">
+                <!-- Create Complaint Tab -->
+                <div id="tabCreate">
+                    <h3 style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">Create Complaint</h3>
+                    <form id="complaintForm" onsubmit="submitComplaint(event)">
+                        <div class="form-group">
+                            <label>Complaint Type</label>
+                            <select id="compCategory" class="form-control" onchange="toggleCategoryFields()" required>
+                                <option value="player">Complaint Against a Player / Admin</option>
+                                <option value="technical">Technical Issue</option>
+                            </select>
+                        </div>
 
-<!-- Content Area -->
-<div class="content-panel">
-<!-- Create Complaint Tab -->
-<div id="tabCreate">
-<h3 style="margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-yellow);">Create Complaint</h3>
-<form id="complaintForm" onsubmit="submitComplaint(event)">
-<div class="form-group">
-<label>Complaint Type</label>
-<select id="compCategory" class="form-control" onchange="toggleCategoryFields()" required>
-<option value="player">Complaint Against a Player / Admin</option>
-<option value="technical">Technical Issue</option>
-</select>
-</div>
+                        <div id="playerFields">
+                            <div class="form-group">
+                                <label>Your In-Game Nickname (Name_Surname)</label>
+                                <input type="text" id="cAuthor" class="form-control" placeholder="e.g. Peter_Nikolas">
+                            </div>
+                            <div class="form-group">
+                                <label>Accused Player Nickname (Name_Surname)</label>
+                                <input type="text" id="cTarget" class="form-control" placeholder="e.g. Dipu_Valenta">
+                            </div>
+                            <div class="form-group">
+                                <label>Violated Rule Points (e.g. 3, 5, 7)</label>
+                                <input type="text" id="cRules" class="form-control" placeholder="3, 5, 7">
+                            </div>
+                        </div>
 
-<div id="playerFields">
-<div class="form-group">
-<label>Your In-Game Nickname (Name_Surname)</label>
-<input type="text" id="cAuthor" class="form-control" placeholder="e.g. Peter_Nikolas">
-</div>
-<div class="form-group">
-<label>Accused Player Nickname (Name_Surname)</label>
-<input type="text" id="cTarget" class="form-control" placeholder="e.g. Dipu_Valenta">
-</div>
-<div class="form-group">
-<label>Violated Rule Points (e.g. 3, 5, 7)</label>
-<input type="text" id="cRules" class="form-control" placeholder="3, 5, 7">
-</div>
-</div>
+                        <div class="form-group">
+                            <label>Description (Briefly describe the situation, max 350 chars)</label>
+                            <textarea id="cDesc" class="form-control" maxlength="350" placeholder="Briefly describe the situation..." required></textarea>
+                        </div>
 
-<div class="form-group">
-<label>Description (Briefly describe the situation, max 350 chars)</label>
-<textarea id="cDesc" class="form-control" maxlength="350" placeholder="Briefly describe the situation..." required></textarea>
-</div>
+                        <div class="form-group">
+                            <label>Evidence: Upload Image/File from Gallery</label>
+                            <input type="file" id="cFile" class="form-control" accept="image/*">
+                        </div>
 
-<div class="form-group">
-<label>Evidence (YouTube Link or Image URL)</label>
-<input type="url" id="cEvidence" class="form-control" placeholder="https://youtube.com/... or https://imgur.com/...">
-</div>
+                        <div class="form-group">
+                            <label>Or YouTube URL / Image URL</label>
+                            <input type="url" id="cEvidenceUrl" class="form-control" placeholder="https://youtube.com/... or https://imgur.com/...">
+                        </div>
 
-<button type="submit" class="btn-submit">SUBMIT COMPLAINT</button>
-</form>
-</div>
+                        <button type="submit" class="btn-submit">SUBMIT COMPLAINT</button>
+                    </form>
+                </div>
 
-<!-- Feed View Tab -->
-<div id="tabFeed" class="hidden">
-<h3 id="feedTitle" style="margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-yellow);">All Complaints (Last 24 Hours)</h3>
-<div id="complaintsFeedList"></div>
-</div>
-</div>
-</div>
-</div>
+                <!-- Feed View Tab -->
+                <div id="tabFeed" class="hidden">
+                    <h3 id="feedTitle" style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">All Complaints (Last 24 Hours)</h3>
+                    <div id="complaintsFeedList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Admin Login / Dashboard Modal View -->
-<div id="adminView" class="hidden" style="margin-top: 20px;">
-<div class="content-panel" style="max-width: 500px; margin: 0 auto;">
-<div id="adminLoginForm">
-<h3 style="margin-bottom: 15px; color: var(--accent-yellow);">Admin Login</h3>
-<div class="form-group">
-<label>Admin Gmail</label>
-<input type="email" id="admEmail" class="form-control" placeholder="Enter admin gmail">
-</div>
-<div class="form-group">
-<label>Password</label>
-<input type="password" id="admPass" class="form-control" placeholder="Enter password">
-</div>
-<button type="button" class="btn-submit" onclick="verifyAdmin()">LOGIN TO DASHBOARD</button>
-</div>
+    <!-- Commands Factions View -->
+    <div id="commandsView" class="hidden">
+        <div class="content-panel">
+            <h3 style="color: var(--accent-yellow); margin-bottom: 12px; font-size: 1.1rem;">Faction Commands Directory</h3>
+            
+            <div id="factionSelectionArea">
+                <div class="faction-category-title">===== [State Organization] =====</div>
+                <div class="faction-grid">
+                    <div class="faction-card" onclick="openFactionCommands('Regional Government')">Regional Government</div>
+                    <div class="faction-card" onclick="openFactionCommands('FSB')">FSB</div>
+                    <div class="faction-card" onclick="openFactionCommands('Military Unit')">Military Unit</div>
+                    <div class="faction-card" onclick="openFactionCommands('News 24')">News 24</div>
+                    <div class="faction-card" onclick="openFactionCommands('Arzamas Police Department')">Arzamas Police Department</div>
+                    <div class="faction-card" onclick="openFactionCommands('Yuzhny Police Department')">Yuzhny Police Department</div>
+                    <div class="faction-card" onclick="openFactionCommands('City Hospital')">City Hospital</div>
+                </div>
 
-<div id="adminDashboard" class="hidden">
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-<h3 style="color: var(--accent-yellow);">Admin Review Dashboard</h3>
-<button onclick="adminLogout()" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Logout</button>
-</div>
-<div id="adminReviewList"></div>
-</div>
-</div>
-</div>
+                <div class="faction-category-title">===== [Organized Criminal Group] =====</div>
+                <div class="faction-grid">
+                    <div class="faction-card" onclick="openFactionCommands('Orekhov OCG')">Orekhov OCG</div>
+                    <div class="faction-card" onclick="openFactionCommands('Kurgan OCG')">Kurgan OCG</div>
+                    <div class="faction-card" onclick="openFactionCommands('Tambov OCG')">Tambov OCG</div>
+                    <div class="faction-card" onclick="openFactionCommands('Caucasian OCG')">Caucasian OCG</div>
+                </div>
+            </div>
+
+            <!-- Faction Detail Command Box -->
+            <div id="factionCommandDetail" class="hidden">
+                <button onclick="backToFactions()" style="background:var(--accent-purple); color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-bottom:12px; font-weight:bold; font-size:0.85rem;">← Back to Factions</button>
+                <h4 id="selectedFactionTitle" style="color: var(--accent-yellow); margin-bottom: 8px; font-size: 1rem;"></h4>
+                <div class="command-box">
+                    <p id="factionCommandsList" style="color: var(--text-muted); font-size: 0.9rem;">Commands for this faction will be added soon. Stay tuned!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login / Dashboard Modal View -->
+    <div id="adminView" class="hidden" style="margin-top: 15px;">
+        <div class="content-panel" style="max-width: 480px; margin: 0 auto;">
+            <div id="adminLoginForm">
+                <h3 style="margin-bottom: 12px; color: var(--accent-yellow);">Admin Login</h3>
+                <div class="form-group">
+                    <label>Admin Gmail</label>
+                    <input type="email" id="admEmail" class="form-control" placeholder="Enter admin gmail">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="admPass" class="form-control" placeholder="Enter password">
+                </div>
+                <button type="button" class="btn-submit" onclick="verifyAdmin()">LOGIN TO DASHBOARD</button>
+            </div>
+
+            <div id="adminDashboard" class="hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="color: var(--accent-yellow); font-size: 1.05rem;">Admin Review Dashboard</h3>
+                    <button onclick="adminLogout()" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Logout</button>
+                </div>
+                <div id="adminReviewList"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-const admins = {
-"rakibbot592@gmail.com": "0507",
-"hackonlyuse1@gmail.com": "Anything"
-};
+    const admins = {
+        "rakibbot592@gmail.com": "0507",
+        "hackonlyuse1@gmail.com": "Anything"
+    };
 
-function switchView(view) {
-document.getElementById('portalView').classList.add('hidden');
-document.getElementById('complaintsView').classList.add('hidden');
-document.getElementById('adminView').classList.add('hidden');
+    function switchView(view) {
+        document.getElementById('portalView').classList.add('hidden');
+        document.getElementById('complaintsView').classList.add('hidden');
+        document.getElementById('commandsView').classList.add('hidden');
+        document.getElementById('adminView').classList.add('hidden');
 
-document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
 
-if (view === 'portal') {
-document.getElementById('portalView').classList.remove('hidden');
-event.target.classList.add('active');
-} else if (view === 'complaints') {
-document.getElementById('complaintsView').classList.remove('hidden');
-event.target.classList.add('active');
-loadComplaintsFeed('all');
-}
-}
+        if (view === 'portal') {
+            document.getElementById('portalView').classList.remove('hidden');
+            event.target.classList.add('active');
+        } else if (view === 'complaints') {
+            document.getElementById('complaintsView').classList.remove('hidden');
+            event.target.classList.add('active');
+            loadComplaintsFeed('all');
+        } else if (view === 'commands') {
+            document.getElementById('commandsView').classList.remove('hidden');
+            event.target.classList.add('active');
+            backToFactions();
+        }
+    }
 
-function toggleDropdown() {
-document.getElementById("myDropdown").classList.toggle("show");
-}
+    function toggleDropdown(event) {
+        event.stopPropagation();
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
 
-window.onclick = function(event) {
-if (!event.target.matches('.dot-btn')) {
-var dropdowns = document.getElementsByClassName("dropdown-content");
-for (let i = 0; i < dropdowns.length; i++) {
-var openDropdown = dropdowns[i];
-if (openDropdown.classList.contains('show')) {
-openDropdown.classList.remove('show');
-}
-}
-}
-}
+    window.onclick = function(event) {
+        if (!event.target.matches('.dot-btn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
 
-function openAdminLogin() {
-document.getElementById('portalView').classList.add('hidden');
-document.getElementById('complaintsView').classList.add('hidden');
-document.getElementById('adminView').classList.remove('hidden');
-if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-document.getElementById('adminLoginForm').classList.add('hidden');
-document.getElementById('adminDashboard').classList.remove('hidden');
-loadAdminReviews();
-}
-}
+    function openAdminLogin() {
+        document.getElementById('myDropdown').classList.remove('show');
+        document.getElementById('portalView').classList.add('hidden');
+        document.getElementById('complaintsView').classList.add('hidden');
+        document.getElementById('commandsView').classList.add('hidden');
+        document.getElementById('adminView').classList.remove('hidden');
+        if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+            document.getElementById('adminLoginForm').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            loadAdminReviews();
+        }
+    }
 
-function verifyAdmin() {
-const email = document.getElementById('admEmail').value.trim().toLowerCase();
-const pass = document.getElementById('admPass').value;
-if (admins[email] && admins[email] === pass) {
-localStorage.setItem('isAdminLoggedIn', 'true');
-document.getElementById('adminLoginForm').classList.add('hidden');
-document.getElementById('adminDashboard').classList.remove('hidden');
-loadAdminReviews();
-} else {
-alert('Invalid Admin Gmail or Password!');
-}
-}
+    function verifyAdmin() {
+        const email = document.getElementById('admEmail').value.trim().toLowerCase();
+        const pass = document.getElementById('admPass').value;
+        if (admins[email] && admins[email] === pass) {
+            localStorage.setItem('isAdminLoggedIn', 'true');
+            localStorage.setItem('currentAdminEmail', email);
+            document.getElementById('adminLoginForm').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            loadAdminReviews();
+        } else {
+            alert('Invalid Admin Gmail or Password!');
+        }
+    }
 
-function adminLogout() {
-localStorage.removeItem('isAdminLoggedIn');
-document.getElementById('adminDashboard').classList.add('hidden');
-document.getElementById('adminLoginForm').classList.remove('hidden');
-}
+    function adminLogout() {
+        localStorage.removeItem('isAdminLoggedIn');
+        localStorage.removeItem('currentAdminEmail');
+        document.getElementById('adminDashboard').classList.add('hidden');
+        document.getElementById('adminLoginForm').classList.remove('hidden');
+    }
 
-function toggleCategoryFields() {
-const cat = document.getElementById('compCategory').value;
-const playerFields = document.getElementById('playerFields');
-if (cat === 'technical') {
-playerFields.classList.add('hidden');
-} else {
-playerFields.classList.remove('hidden');
-}
-}
+    function openFactionCommands(factionName) {
+        document.getElementById('factionSelectionArea').classList.add('hidden');
+        document.getElementById('factionCommandDetail').classList.remove('hidden');
+        document.getElementById('selectedFactionTitle').innerText = factionName + " Commands";
+    }
 
-function setCompTab(tab) {
-document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active-tab'));
-event.target.classList.add('active-tab');
+    function backToFactions() {
+        document.getElementById('factionCommandDetail').classList.add('hidden');
+        document.getElementById('factionSelectionArea').classList.remove('hidden');
+    }
 
-if (tab === 'create') {
-document.getElementById('tabCreate').classList.remove('hidden');
-document.getElementById('tabFeed').classList.add('hidden');
-} else {
-document.getElementById('tabCreate').classList.add('hidden');
-document.getElementById('tabFeed').classList.remove('hidden');
-loadComplaintsFeed(tab);
-}
-}
+    function toggleCategoryFields() {
+        const cat = document.getElementById('compCategory').value;
+        const playerFields = document.getElementById('playerFields');
+        if (cat === 'technical') {
+            playerFields.classList.add('hidden');
+        } else {
+            playerFields.classList.remove('hidden');
+        }
+    }
 
-function submitComplaint(e) {
-e.preventDefault();
-const category = document.getElementById('compCategory').value;
-const desc = document.getElementById('cDesc').value;
-const evidence = document.getElementById('cEvidence').value;
-const now = new Date();
-const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+    function setCompTab(tab) {
+        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active-tab'));
+        event.target.classList.add('active-tab');
 
-let title = "";
-if (category === 'technical') {
-title = "Technical Issue Report";
-} else {
-const author = document.getElementById('cAuthor').value || "Unknown";
-const target = document.getElementById('cTarget').value || "Unknown";
-const rules = document.getElementById('cRules').value || "N/A";
-title = From ${author} against ${target} (Rules: ${rules})`;
-}
+        if (tab === 'create') {
+            document.getElementById('tabCreate').classList.remove('hidden');
+            document.getElementById('tabFeed').classList.add('hidden');
+        } else {
+            document.getElementById('tabCreate').classList.add('hidden');
+            document.getElementById('tabFeed').classList.remove('hidden');
+            loadComplaintsFeed(tab);
+        }
+    }
 
-let report = {
-id: Math.floor(100000 + Math.random() * 900000),
-time: Date.now(),
-dateStr: dateStr,
-category: category,
-title: title,
-desc: desc,
-evidence: evidence,
-status: 'Not Reviewed',
-adminComment: ''
-};
+    function submitComplaint(e) {
+        e.preventDefault();
+        const category = document.getElementById('compCategory').value;
+        const desc = document.getElementById('cDesc').value;
+        const evidenceUrl = document.getElementById('cEvidenceUrl').value;
+        const fileInput = document.getElementById('cFile');
+        const now = new Date();
+        const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
 
-let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-list.push(report);
-localStorage.setItem('infinityReports', JSON.stringify(list));
+        let title = "";
+        if (category === 'technical') {
+            title = "Technical Issue Report";
+        } else {
+            const author = document.getElementById('cAuthor').value || "Unknown";
+            const target = document.getElementById('cTarget').value || "Unknown";
+            const rules = document.getElementById('cRules').value || "N/A";
+            title = `From ${author} against ${target} (Rules: ${rules})`;
+        }
 
-alert('Complaint created successfully!');
-document.getElementById('complaintForm').reset();
-setCompTab('all');
-}
+        const processReport = (fileData) => {
+            let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+            let nextNum = parseInt(localStorage.getItem('infinityNextId')) || 1;
+            let formattedId = '#' + String(nextNum).padStart(4, '0');
+            localStorage.setItem('infinityNextId', nextNum + 1);
 
-function loadComplaintsFeed(filter) {
-const feedList = document.getElementById('complaintsFeedList');
-feedList.innerHTML = '';
-let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-const now = Date.now();
+            let report = {
+                idStr: formattedId,
+                time: Date.now(),
+                dateStr: dateStr,
+                category: category,
+                title: title,
+                desc: desc,
+                evidenceUrl: evidenceUrl,
+                fileData: fileData || '',
+                status: 'Not Reviewed',
+                adminComment: '',
+                reviewedBy: ''
+            };
 
-// 24 Hours filter
-list = list.filter(r => (now - r.time) < 86400000);
-localStorage.setItem('infinityReports', JSON.stringify(list));
+            list.push(report);
+            localStorage.setItem('infinityReports', JSON.stringify(list));
 
-if (filter === 'not_reviewed') {
-list = list.filter(r => r.status === 'Not Reviewed');
-} else if (filter === 'reviewed') {
-list = list.filter(r => r.status === 'Reviewed' || r.status === 'Rejected');
-}
+            alert('Complaint created successfully with ID ' + formattedId + '!');
+            document.getElementById('complaintForm').reset();
+            setCompTab('all');
+        };
 
-if (list.length === 0) {
-feedList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">No complaints found.</p>';
-return;
-}
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(uploadEvent) {
+                processReport(uploadEvent.target.result);
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            processReport('');
+        }
+    }
 
-list.slice().reverse().forEach(r => {
-let badgeClass = r.status === 'Reviewed' ? 'badge-reviewed' : (r.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
-let div = document.createElement('div');
-div.className = 'feed-card';
-div.innerHTML = &lt;div class="feed-header"&gt; &lt;span&gt;#${r.id}    {badgeClass}"> {r.title}</div>
-<div class="feed-desc"> {r.evidence ? <a href="${r.evidence}" target="_blank" style="color:#c084fc; font-size:0.85rem; display:inline-block; margin-bottom:5px;">View Evidence Link</a>: ''}${r.adminComment ? <div style="background:rgba(139,92,246,0.2); padding:6px; border-left:3px solid var(--accent-purple); font-size:0.85rem; margin-top:5px;"&gt;&lt;strong&gt;Admin Comment:&lt;/strong&gt; ${r.adminComment}</div>: ''};
-feedList.appendChild(div);
-});
-}
+    function loadComplaintsFeed(filter) {
+        const feedList = document.getElementById('complaintsFeedList');
+        feedList.innerHTML = '';
+        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        const now = Date.now();
 
-function loadAdminReviews() {
-const reviewList = document.getElementById('adminReviewList');
-reviewList.innerHTML = '';
-let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        list = list.filter(r => (now - r.time) < 86400000);
+        localStorage.setItem('infinityReports', JSON.stringify(list));
 
-if (list.length === 0) {
-reviewList.innerHTML = '<p style="color:var(--text-muted); text-align:center;">No reports to review.</p>';
-return;
-}
+        if (filter === 'not_reviewed') {
+            list = list.filter(r => r.status === 'Not Reviewed');
+        } else if (filter === 'reviewed') {
+            list = list.filter(r => r.status === 'Reviewed' || r.status === 'Rejected');
+        }
 
-list.slice().reverse().forEach((r, idx) => {
-let realIdx = list.length - 1 - idx;
-let div = document.createElement('div');
-div.className = 'feed-card';
-div.innerHTML = &lt;div class="feed-header"&gt;&lt;span&gt;#${r.id} ( {r.dateStr}</span></div>
-<div style="font-weight:bold; font-size:0.9rem;"> {r.desc}</div>
-<input type="text" id="admComm_ {r.adminComment || ''}" placeholder="Write admin feedback..." style="margin-bottom:8px; font-size:0.85rem;">
-<div style="display:flex; gap:6px;">
-<button onclick="updateReportStatus(latex
-{realIdx}, 'Reviewed')" style="background:#10b981; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;"&gt;Review / Accept&lt;/button&gt; &lt;button onclick="updateReportStatus(
+        if (list.length === 0) {
+            feedList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:15px;">No complaints found.</p>';
+            return;
+        }
 
-{realIdx}, 'Rejected')" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Reject</button>
-<button onclick="deleteReport(${realIdx})" style="background:#475569; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;"&gt;Delete&lt;/button&gt; &lt;/div&gt;;
-reviewList.appendChild(div);
-});
-}
+        list.slice().reverse().forEach(r => {
+            let badgeClass = r.status === 'Reviewed' ? 'badge-reviewed' : (r.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
+            let div = document.createElement('div');
+            div.className = 'feed-card';
+            
+            let evidenceHtml = '';
+            if (r.evidenceUrl) {
+                evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.8rem; display:block; margin-bottom:4px;">View YouTube/URL Evidence</a>`;
+            }
+            if (r.fileData) {
+                evidenceHtml += `<div style="margin-top:4px;"><img src="${r.fileData}" style="max-width:100%; height:110px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"></div>`;
+            }
 
-function updateReportStatus(idx, status) {
-let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-const comment = document.getElementById(admComm_${idx}`).value;
-list[idx].status = status;
-list[idx].adminComment = comment;
-localStorage.setItem('infinityReports', JSON.stringify(list));
-alert('Complaint status updated successfully!');
-loadAdminReviews();
-}
+            div.innerHTML = `
+                <div class="feed-header">
+                    <span>${r.idStr} &nbsp; ${r.dateStr}</span>
+                    <span class="badge ${badgeClass}">${r.status}</span>
+                </div>
+                <div style="font-weight:bold; font-size:0.9rem; margin-bottom:3px;">${r.title}</div>
+                <div class="feed-desc">${r.desc}</div>
+                ${evidenceHtml}
+                ${r.reviewedBy ? `<div style="font-size:0.78rem; color:var(--accent-yellow); margin-top:4px;">Reviewed By: <strong>${r.reviewedBy}</strong></div>` : ''}
+                ${r.adminComment ? `<div style="background:rgba(147,51,234,0.25); padding:5px; border-left:3px solid var(--accent-purple); font-size:0.8rem; margin-top:4px;"><strong>Admin Comment:</strong> ${r.adminComment}</div>` : ''}
+            `;
+            feedList.appendChild(div);
+        });
+    }
 
-function deleteReport(idx) {
-let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-list.splice(idx, 1);
-localStorage.setItem('infinityReports', JSON.stringify(list));
-loadAdminReviews();
-}
+    function loadAdminReviews() {
+        const reviewList = document.getElementById('adminReviewList');
+        reviewList.innerHTML = '';
+        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+
+        if (list.length === 0) {
+            reviewList.innerHTML = '<p style="color:var(--text-muted); text-align:center;">No reports to review.</p>';
+            return;
+        }
+
+        list.slice().reverse().forEach((r, idx) => {
+            let realIdx = list.length - 1 - idx;
+            let div = document.createElement('div');
+            div.className = 'feed-card';
+
+            let evidenceHtml = '';
+            if (r.evidenceUrl) {
+                evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.8rem; display:block; margin-bottom:4px;">View Evidence Link</a>`;
+            }
+            if (r.fileData) {
+                evidenceHtml += `<div style="margin-top:4px;"><img src="${r.fileData}" style="max-width:100%; height:110px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"></div>`;
+            }
+
+            let actionButtons = '';
+            if (r.status !== 'Not Reviewed') {
+                actionButtons = `<div style="color:#10b981; font-weight:bold; font-size:0.8rem;">Status Locked (${r.status} by ${r.reviewedBy})</div>`;
+            } else {
+                actionButtons = `
+                    <input type="text" id="admComm_${realIdx}" class="form-control" placeholder="Write admin feedback..." style="margin-bottom:6px; font-size:0.8rem;">
+                    <div style="display:flex; gap:5px;">
+                        <button onclick="updateReportStatus(${realIdx}, 'Reviewed')" style="background:#10b981; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Review / Accept</button>
+                        <button onclick="updateReportStatus(${realIdx}, 'Rejected')" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Reject</button>
+                        <button onclick="deleteReport(${realIdx})" style="background:#475569; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem;">Delete</button>
+                    </div>
+                `;
+            }
+
+            div.innerHTML = `
+                <div class="feed-header"><span>${r.idStr} (${r.status})</span><span>${r.dateStr}</span></div>
+                <div style="font-weight:bold; font-size:0.85rem;">${r.title}</div>
+                <div style="font-size:0.8rem; margin:4px 0;">${r.desc}</div>
+                ${evidenceHtml}
+                <div style="margin-top:6px;">${actionButtons}</div>
+            `;
+            reviewList.appendChild(div);
+        });
+    }
+
+    function updateReportStatus(idx, status) {
+        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        if (list[idx].status !== 'Not Reviewed') {
+            alert('This complaint has already been reviewed and is locked!');
+            return;
+        }
+
+        const commentInput = document.getElementById(`admComm_${idx}`);
+        const comment = commentInput ? commentInput.value : '';
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
+
+        let reviewerName = "Infinity_Rakib";
+        if (currentEmail === 'hackonlyuse1@gmail.com') {
+            reviewerName = "Levi_Ackerman";
+        }
+
+        list[idx].status = status;
+        list[idx].adminComment = comment;
+        list[idx].reviewedBy = reviewerName;
+
+        localStorage.setItem('infinityReports', JSON.stringify(list));
+        alert('Complaint status successfully locked as ' + status + '!');
+        loadAdminReviews();
+    }
+
+    function deleteReport(idx) {
+        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        list.splice(idx, 1);
+        localStorage.setItem('infinityReports', JSON.stringify(list));
+        loadAdminReviews();
+    }
 </script>
 
 </body>
