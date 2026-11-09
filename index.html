@@ -7,7 +7,7 @@
     <style>
         :root {
             --bg-color: #0b0f19;
-            --card-bg: rgba(26, 22, 45, 0.75);
+            --card-bg: rgba(26, 22, 45, 0.85);
             --border-color: #4c1d95;
             --accent-yellow: #facc15;
             --accent-purple: #8b5cf6;
@@ -85,7 +85,28 @@
         .game-info { text-align: left; margin-top: 15px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
         .game-info h3 { color: #fff; margin-bottom: 8px; font-size: 1.1rem; }
 
-        /* Complaints Layout matching user screenshots */
+        /* Game Screenshots Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .gallery-item {
+            background: rgba(11, 15, 25, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Complaints Layout */
         .complaints-wrapper {
             display: grid;
             grid-template-columns: 240px 1fr;
@@ -94,11 +115,7 @@
         @media (max-width: 768px) {
             .complaints-wrapper { grid-template-columns: 1fr; }
         }
-        .sidebar-menu {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        .sidebar-menu { display: flex; flex-direction: column; gap: 8px; }
         .sidebar-btn {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -131,7 +148,7 @@
         .form-control {
             width: 100%; background: rgba(11, 15, 25, 0.6);
             border: 1px solid var(--border-color); border-radius: 6px;
-            padding: 10px; color: #fff; font-size: 0.95krem;
+            padding: 10px; color: #fff; font-size: 0.95rem;
         }
         textarea.form-control { height: 100px; resize: none; }
         
@@ -186,13 +203,21 @@
                 <h3>About Infinity Mobile RP</h3>
                 <p>Welcome to Infinity Mobile RP – the ultimate mobile roleplaying experience. Immerse yourself in a living, breathing virtual world where your choices shape your destiny. Become a dedicated law enforcement officer protecting the streets, join criminal syndicates to build your empire, launch your own business enterprises, own luxurious real estate, achieve ultimate wealth, and live a rich lifestyle with thousands of active players.</p>
             </div>
+
+            <!-- Game Screenshots Gallery -->
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=600&auto=format&fit=crop" alt="Game View 1"></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600&auto=format&fit=crop" alt="Game View 2"></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=600&auto=format&fit=crop" alt="Game View 3"></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600&auto=format&fit=crop" alt="Game View 4"></div>
+            </div>
         </div>
     </div>
 
     <!-- Complaints System View -->
     <div id="complaintsView" class="hidden">
         <div class="complaints-wrapper">
-            <!-- Sidebar Menu (Matching Screenshot) -->
+            <!-- Sidebar Menu -->
             <div class="sidebar-menu">
                 <button class="sidebar-btn active-tab" onclick="setCompTab('create')">CREATE COMPLAINT</button>
                 <button class="sidebar-btn" onclick="setCompTab('all')">ALL COMPLAINTS</button>
@@ -217,11 +242,11 @@
                         <div id="playerFields">
                             <div class="form-group">
                                 <label>Your In-Game Nickname (Name_Surname)</label>
-                                <input type="text" id="cAuthor" class="form-control" placeholder="e.g. Peter_Nikolas">
+                                <input type="text" id="cAuthor" class="form-control" placeholder="e.g. Arin_Shah">
                             </div>
                             <div class="form-group">
                                 <label>Accused Player Nickname (Name_Surname)</label>
-                                <input type="text" id="cTarget" class="form-control" placeholder="e.g. Dipu_Valenta">
+                                <input type="text" id="cTarget" class="form-control" placeholder="e.g. Peter_Nikolas">
                             </div>
                             <div class="form-group">
                                 <label>Violated Rule Points (e.g. 3, 5, 7)</label>
@@ -235,8 +260,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Evidence (YouTube Link or Image URL)</label>
-                            <input type="url" id="cEvidence" class="form-control" placeholder="https://youtube.com/... or https://imgur.com/...">
+                            <label>Evidence: Upload Image/File from Gallery</label>
+                            <input type="file" id="cFile" class="form-control" accept="image/*">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Or YouTube URL / Image URL</label>
+                            <input type="url" id="cEvidenceUrl" class="form-control" placeholder="https://youtube.com/... or https://imgur.com/...">
                         </div>
 
                         <button type="submit" class="btn-submit">SUBMIT COMPLAINT</button>
@@ -334,6 +364,7 @@
         const pass = document.getElementById('admPass').value;
         if (admins[email] && admins[email] === pass) {
             localStorage.setItem('isAdminLoggedIn', 'true');
+            localStorage.setItem('currentAdminEmail', email);
             document.getElementById('adminLoginForm').classList.add('hidden');
             document.getElementById('adminDashboard').classList.remove('hidden');
             loadAdminReviews();
@@ -344,6 +375,7 @@
 
     function adminLogout() {
         localStorage.removeItem('isAdminLoggedIn');
+        localStorage.removeItem('currentAdminEmail');
         document.getElementById('adminDashboard').classList.add('hidden');
         document.getElementById('adminLoginForm').classList.remove('hidden');
     }
@@ -376,7 +408,8 @@
         e.preventDefault();
         const category = document.getElementById('compCategory').value;
         const desc = document.getElementById('cDesc').value;
-        const evidence = document.getElementById('cEvidence').value;
+        const evidenceUrl = document.getElementById('cEvidenceUrl').value;
+        const fileInput = document.getElementById('cFile');
         const now = new Date();
         const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
 
@@ -390,25 +423,44 @@
             title = `From ${author} against ${target} (Rules: ${rules})`;
         }
 
-        let report = {
-            id: Math.floor(100000 + Math.random() * 900000),
-            time: Date.now(),
-            dateStr: dateStr,
-            category: category,
-            title: title,
-            desc: desc,
-            evidence: evidence,
-            status: 'Not Reviewed',
-            adminComment: ''
+        // Handle file upload reader
+        const processReport = (fileData) => {
+            let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+            let nextNum = parseInt(localStorage.getItem('infinityNextId')) || 1;
+            let formattedId = '#' + String(nextNum).padStart(4, '0');
+            localStorage.setItem('infinityNextId', nextNum + 1);
+
+            let report = {
+                idStr: formattedId,
+                time: Date.now(),
+                dateStr: dateStr,
+                category: category,
+                title: title,
+                desc: desc,
+                evidenceUrl: evidenceUrl,
+                fileData: fileData || '',
+                status: 'Not Reviewed',
+                adminComment: '',
+                reviewedBy: ''
+            };
+
+            list.push(report);
+            localStorage.setItem('infinityReports', JSON.stringify(list));
+
+            alert('Complaint created successfully with ID ' + formattedId + '!');
+            document.getElementById('complaintForm').reset();
+            setCompTab('all');
         };
 
-        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-        list.push(report);
-        localStorage.setItem('infinityReports', JSON.stringify(list));
-
-        alert('Complaint created successfully!');
-        document.getElementById('complaintForm').reset();
-        setCompTab('all');
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(uploadEvent) {
+                processReport(uploadEvent.target.result);
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            processReport('');
+        }
     }
 
     function loadComplaintsFeed(filter) {
@@ -436,14 +488,24 @@
             let badgeClass = r.status === 'Reviewed' ? 'badge-reviewed' : (r.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
             let div = document.createElement('div');
             div.className = 'feed-card';
+            
+            let evidenceHtml = '';
+            if (r.evidenceUrl) {
+                evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.85rem; display:block; margin-bottom:5px;">View YouTube/URL Evidence</a>`;
+            }
+            if (r.fileData) {
+                evidenceHtml += `<div style="margin-top:5px;"><img src="${r.fileData}" style="max-width:100%; height:120px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"></div>`;
+            }
+
             div.innerHTML = `
                 <div class="feed-header">
-                    <span>#${r.id} &nbsp; ${r.dateStr}</span>
+                    <span>${r.idStr} &nbsp; ${r.dateStr}</span>
                     <span class="badge ${badgeClass}">${r.status}</span>
                 </div>
                 <div style="font-weight:bold; font-size:0.95rem; margin-bottom:4px;">${r.title}</div>
                 <div class="feed-desc">${r.desc}</div>
-                ${r.evidence ? `<a href="${r.evidence}" target="_blank" style="color:#c084fc; font-size:0.85rem; display:inline-block; margin-bottom:5px;">View Evidence Link</a>` : ''}
+                ${evidenceHtml}
+                ${r.reviewedBy ? `<div style="font-size:0.8rem; color:var(--accent-yellow); margin-top:5px;">Reviewed By: <strong>${r.reviewedBy}</strong></div>` : ''}
                 ${r.adminComment ? `<div style="background:rgba(139,92,246,0.2); padding:6px; border-left:3px solid var(--accent-purple); font-size:0.85rem; margin-top:5px;"><strong>Admin Comment:</strong> ${r.adminComment}</div>` : ''}
             `;
             feedList.appendChild(div);
@@ -464,16 +526,35 @@
             let realIdx = list.length - 1 - idx;
             let div = document.createElement('div');
             div.className = 'feed-card';
+
+            let evidenceHtml = '';
+            if (r.evidenceUrl) {
+                evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.85rem; display:block; margin-bottom:5px;">View Evidence Link</a>`;
+            }
+            if (r.fileData) {
+                evidenceHtml += `<div style="margin-top:5px;"><img src="${r.fileData}" style="max-width:100%; height:120px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"></div>`;
+            }
+
+            let actionButtons = '';
+            if (r.status !== 'Not Reviewed') {
+                actionButtons = `<div style="color:#10b981; font-weight:bold; font-size:0.85rem;">Status Locked (${r.status} by ${r.reviewedBy})</div>`;
+            } else {
+                actionButtons = `
+                    <input type="text" id="admComm_${realIdx}" class="form-control" placeholder="Write admin feedback..." style="margin-bottom:8px; font-size:0.85rem;">
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="updateReportStatus(${realIdx}, 'Reviewed')" style="background:#10b981; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Review / Accept</button>
+                        <button onclick="updateReportStatus(${realIdx}, 'Rejected')" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Reject</button>
+                        <button onclick="deleteReport(${realIdx})" style="background:#475569; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Delete</button>
+                    </div>
+                `;
+            }
+
             div.innerHTML = `
-                <div class="feed-header"><span>#${r.id} (${r.status})</span><span>${r.dateStr}</span></div>
+                <div class="feed-header"><span>${r.idStr} (${r.status})</span><span>${r.dateStr}</span></div>
                 <div style="font-weight:bold; font-size:0.9rem;">${r.title}</div>
                 <div style="font-size:0.85rem; margin:5px 0;">${r.desc}</div>
-                <input type="text" id="admComm_${realIdx}" class="form-control" value="${r.adminComment || ''}" placeholder="Write admin feedback..." style="margin-bottom:8px; font-size:0.85rem;">
-                <div style="display:flex; gap:6px;">
-                    <button onclick="updateReportStatus(${realIdx}, 'Reviewed')" style="background:#10b981; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Review / Accept</button>
-                    <button onclick="updateReportStatus(${realIdx}, 'Rejected')" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Reject</button>
-                    <button onclick="deleteReport(${realIdx})" style="background:#475569; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Delete</button>
-                </div>
+                ${evidenceHtml}
+                <div style="margin-top:8px;">${actionButtons}</div>
             `;
             reviewList.appendChild(div);
         });
@@ -481,11 +562,26 @@
 
     function updateReportStatus(idx, status) {
         let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-        const comment = document.getElementById(`admComm_${idx}`).value;
+        if (list[idx].status !== 'Not Reviewed') {
+            alert('This complaint has already been reviewed and is locked!');
+            return;
+        }
+
+        const commentInput = document.getElementById(`admComm_${idx}`);
+        const comment = commentInput ? commentInput.value : '';
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
+
+        let reviewerName = "Infinity_Rakib";
+        if (currentEmail === 'hackonlyuse1@gmail.com') {
+            reviewerName = "Levi_Ackerman";
+        }
+
         list[idx].status = status;
         list[idx].adminComment = comment;
+        list[idx].reviewedBy = reviewerName;
+
         localStorage.setItem('infinityReports', JSON.stringify(list));
-        alert('Complaint status updated successfully!');
+        alert('Complaint status successfully locked as ' + status + '!');
         loadAdminReviews();
     }
 
