@@ -202,7 +202,6 @@
             border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.95rem;
         }
         
-        /* Modal Popup */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;
@@ -214,11 +213,11 @@
 </head>
 <body>
 
-<!-- User Profile Setup Modal (Only pops up if not saved yet during submit) -->
+<!-- User Profile Setup Modal (Triggered ONLY on Final Submit if Not Logged In) -->
 <div id="userSetupModal" class="modal-overlay hidden">
     <div class="modal-box">
         <h3 style="color: var(--accent-yellow); margin-bottom: 10px;">Setup Complaint Profile</h3>
-        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">Please enter your Gmail and In-Game Name to submit complaints. This is required only once!</p>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">Please enter your Gmail and In-Game Name to finalize your complaint. Required only once!</p>
         <div class="form-group" style="text-align: left;">
             <label>Your Gmail</label>
             <input type="email" id="modalUserEmail" class="form-control" placeholder="yourgmail@gmail.com">
@@ -227,7 +226,7 @@
             <label>In-Game Name (Name_Surname)</label>
             <input type="text" id="modalUserInGame" class="form-control" placeholder="e.g. Peter_Nikolas">
         </div>
-        <button type="button" class="btn-submit" onclick="saveUserProfile()">SAVE & SUBMIT</button>
+        <button type="button" class="btn-submit" onclick="saveAndProcessComplaint()">CONFIRM & SUBMIT</button>
     </div>
 </div>
 
@@ -356,7 +355,7 @@
     <!-- ADMIN VIEW -->
     <div id="adminView" class="hidden">
         <div class="content-panel" style="max-width: 520px; margin: 0 auto;">
-            <!-- Admin Login (Gmail and Password only) -->
+            <!-- Admin Login -->
             <div id="adminLoginForm">
                 <h3 style="margin-bottom: 12px; color: var(--accent-yellow);">Admin Login</h3>
                 <div class="form-group">
@@ -445,7 +444,13 @@
 
     let currentFilter = 'all';
 
-    function saveUserProfile() {
+    function openUserSetupModal() {
+        document.getElementById('modalUserEmail').value = localStorage.getItem('userEmail') || '';
+        document.getElementById('modalUserInGame').value = localStorage.getItem('userInGameName') || '';
+        document.getElementById('userSetupModal').classList.remove('hidden');
+    }
+
+    function saveAndProcessComplaint() {
         let email = document.getElementById('modalUserEmail').value.trim().toLowerCase();
         let inGame = document.getElementById('modalUserInGame').value.trim();
 
@@ -465,15 +470,9 @@
             localStorage.setItem('userInGameName', inGame);
             document.getElementById('userSetupModal').classList.add('hidden');
             
-            // Proceed to submit complaint directly after saving profile
-            document.getElementById('complaintForm').dispatchEvent(new Event('submit'));
+            // Now execute actual complaint submission with preserved form data
+            processAndUploadComplaint();
         });
-    }
-
-    function openUserSetupModal() {
-        document.getElementById('modalUserEmail').value = localStorage.getItem('userEmail') || '';
-        document.getElementById('modalUserInGame').value = localStorage.getItem('userInGameName') || '';
-        document.getElementById('userSetupModal').classList.remove('hidden');
     }
 
     function switchView(view, e) {
@@ -642,7 +641,7 @@
             let data = snapshot.val();
             let html = `<h5 style="color:var(--text-muted); margin-bottom:6px; font-size:0.85rem;">Default Admins:</h5>`;
             Object.keys(defaultAdmins).forEach(email => {
-                html += `<div class="feed-card" style="font-size:0.85rem; padding:8px;">${email}</div>`;
+                html += `<div class="feed-card" style="font-size:0.85rem; padding:8px;">${email} (Built-in)</div>`;
             });
 
             if (data) {
@@ -661,9 +660,15 @@
     }
 
     function removeAdmin(key, email) {
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
+        if (currentEmail !== 'rakibbot592@gmail.com') {
+            alert('Permission Denied!');
+            return;
+        }
+
         adminsRef.child(key).remove().then(() => {
-            logAction(`Admin '${email}' removed.`);
-            alert('Admin removed!');
+            logAction(`Admin '${email}' was removed by Rakib.`);
+            alert('Admin removed successfully!');
             loadRegisteredAdmins();
         });
     }
@@ -710,11 +715,18 @@
         let userEmail = localStorage.getItem('userEmail');
         let userInGame = localStorage.getItem('userInGameName');
 
-        // If user profile is not saved yet, open modal and stop submission temporarily
+        // If profile is not saved yet, open modal and PRESERVE all form fields
         if (!userEmail || !userInGame) {
             openUserSetupModal();
             return;
         }
+
+        processAndUploadComplaint();
+    }
+
+    function processAndUploadComplaint() {
+        let userEmail = localStorage.getItem('userEmail');
+        let userInGame = localStorage.getItem('userInGameName');
 
         const category = document.getElementById('compCategory').value;
         const desc = document.getElementById('cDesc').value;
@@ -732,7 +744,7 @@
             title = `From ${userInGame} against ${target} (Rules: ${rules})`;
         }
 
-        const processReportsWithFiles = (fileDataArray) => {
+        const uploadToFirebase = (fileDataArray) => {
             idCounterRef.transaction((currentId) => {
                 return (currentId || 0) + 1;
             }, (error, committed, snapshot) => {
@@ -775,13 +787,13 @@
                     base64Images[index] = uploadEvent.target.result;
                     loadedCount++;
                     if (loadedCount === files.length) {
-                        processReportsWithFiles(base64Images);
+                        uploadToFirebase(base64Images);
                     }
                 };
                 reader.readAsDataURL(file);
             });
         } else {
-            processReportsWithFiles([]);
+            uploadToFirebase([]);
         }
     }
 
@@ -838,7 +850,6 @@
             let div = document.createElement('div');
             div.className = 'feed-card';
             
-            // Long Press Event for Rakib to get author email and ban
             let pressTimer;
             div.onmousedown = div.ontouchstart = (e) => {
                 pressTimer = setTimeout(() => {
