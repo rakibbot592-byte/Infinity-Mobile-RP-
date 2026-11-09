@@ -25,7 +25,6 @@
         }
         .container { max-width: 950px; margin: 0 auto; }
         
-        /* Top Navigation Header */
         .top-header {
             display: flex;
             justify-content: space-between;
@@ -61,9 +60,8 @@
             white-space: nowrap; 
         }
         .nav-link.active { color: #fff; background: rgba(147, 51, 234, 0.5); border: 1px solid var(--accent-purple); }
-        .nav-link.admin-nav { color: var(--accent-yellow); border: 1px dashed var(--accent-yellow); }
+        .nav-link.admin-btn { color: var(--accent-yellow); border: 1px dashed var(--accent-yellow); }
 
-        /* Hero & Game Info Section */
         .hero-section {
             background: var(--card-bg);
             backdrop-filter: blur(12px);
@@ -94,7 +92,6 @@
         }
         .download-btn:hover { transform: scale(1.02); background: #fde047; }
 
-        /* Complaints Layout */
         .complaints-wrapper {
             display: grid;
             grid-template-columns: 220px 1fr;
@@ -133,7 +130,6 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
 
-        /* Commands Section Styling */
         .faction-category-title {
             color: var(--accent-yellow);
             font-size: 1rem;
@@ -172,7 +168,6 @@
             margin-top: 12px;
         }
 
-        /* Form styling */
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; margin-bottom: 4px; font-size: 0.85rem; color: var(--text-muted); }
         .form-control {
@@ -182,7 +177,6 @@
         }
         textarea.form-control { height: 90px; resize: none; }
         
-        /* Feed items */
         .feed-card {
             background: rgba(11, 15, 25, 0.6);
             border: 1px solid var(--border-color);
@@ -207,18 +201,16 @@
 <body>
 
 <div class="container">
-    <!-- Top Header with Direct Slideable Admin Panel Button -->
     <div class="top-header">
         <div class="header-title">INFINITY MOBILE RP</div>
         <div class="header-menu">
-            <button class="nav-link active" onclick="switchView('portal')">HOME</button>
-            <button class="nav-link" onclick="switchView('complaints')">COMPLAINTS</button>
-            <button class="nav-link" onclick="switchView('commands')">COMMANDS</button>
-            <button class="nav-link admin-nav" onclick="switchView('admin')">ADMIN PANEL</button>
+            <button class="nav-link active" onclick="switchView('portal', event)">HOME</button>
+            <button class="nav-link" onclick="switchView('complaints', event)">COMPLAINTS</button>
+            <button class="nav-link" onclick="switchView('commands', event)">COMMANDS</button>
+            <button class="nav-link admin-btn" onclick="switchView('admin', event)">ADMIN PANEL</button>
         </div>
     </div>
 
-    <!-- Main Portal View -->
     <div id="portalView">
         <div class="hero-section">
             <div class="game-info">
@@ -230,20 +222,16 @@
         </div>
     </div>
 
-    <!-- Complaints System View -->
     <div id="complaintsView" class="hidden">
         <div class="complaints-wrapper">
-            <!-- Sidebar Menu -->
             <div class="sidebar-menu">
-                <button class="sidebar-btn active-tab" onclick="setCompTab('create')">CREATE COMPLAINT</button>
-                <button class="sidebar-btn" onclick="setCompTab('all')">ALL COMPLAINTS</button>
-                <button class="sidebar-btn" onclick="setCompTab('not_reviewed')">NOT REVIEWED</button>
-                <button class="sidebar-btn" onclick="setCompTab('reviewed')">REVIEWED</button>
+                <button class="sidebar-btn active-tab" onclick="setCompTab('create', event)">CREATE COMPLAINT</button>
+                <button class="sidebar-btn" onclick="setCompTab('all', event)">ALL COMPLAINTS</button>
+                <button class="sidebar-btn" onclick="setCompTab('not_reviewed', event)">NOT REVIEWED</button>
+                <button class="sidebar-btn" onclick="setCompTab('reviewed', event)">REVIEWED</button>
             </div>
 
-            <!-- Content Area -->
             <div class="content-panel">
-                <!-- Create Complaint Tab -->
                 <div id="tabCreate">
                     <h3 style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">Create Complaint</h3>
                     <form id="complaintForm" onsubmit="submitComplaint(event)">
@@ -289,16 +277,14 @@
                     </form>
                 </div>
 
-                <!-- Feed View Tab -->
                 <div id="tabFeed" class="hidden">
-                    <h3 id="feedTitle" style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">All Complaints (Last 24 Hours)</h3>
+                    <h3 id="feedTitle" style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">All Complaints (Public Feed)</h3>
                     <div id="complaintsFeedList"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Commands Factions View -->
     <div id="commandsView" class="hidden">
         <div class="content-panel">
             <h3 style="color: var(--accent-yellow); margin-bottom: 12px; font-size: 1.1rem;">Faction Commands Directory</h3>
@@ -324,7 +310,6 @@
                 </div>
             </div>
 
-            <!-- Faction Detail Command Box -->
             <div id="factionCommandDetail" class="hidden">
                 <button onclick="backToFactions()" style="background:var(--accent-purple); color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-bottom:12px; font-weight:bold; font-size:0.85rem;">← Back to Factions</button>
                 <h4 id="selectedFactionTitle" style="color: var(--accent-yellow); margin-bottom: 8px; font-size: 1rem;"></h4>
@@ -335,7 +320,6 @@
         </div>
     </div>
 
-    <!-- Admin Panel View -->
     <div id="adminView" class="hidden">
         <div class="content-panel" style="max-width: 480px; margin: 0 auto;">
             <div id="adminLoginForm">
@@ -365,31 +349,31 @@
 <script>
     const admins = {
         "rakibbot592@gmail.com": "0507",
-        "hackonlyuse1@gmail.com": "Anything"
+        "hackonlyuse1@gmail.com": "Anything",
+        "knavil400@gmail.com": "1234"
     };
 
-    function switchView(view) {
+    function switchView(view, e) {
         document.getElementById('portalView').classList.add('hidden');
         document.getElementById('complaintsView').classList.add('hidden');
         document.getElementById('commandsView').classList.add('hidden');
         document.getElementById('adminView').classList.add('hidden');
 
         document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+        if (e && e.target) {
+            e.target.classList.add('active');
+        }
 
         if (view === 'portal') {
             document.getElementById('portalView').classList.remove('hidden');
-            event.target.classList.add('active');
         } else if (view === 'complaints') {
             document.getElementById('complaintsView').classList.remove('hidden');
-            event.target.classList.add('active');
             loadComplaintsFeed('all');
         } else if (view === 'commands') {
             document.getElementById('commandsView').classList.remove('hidden');
-            event.target.classList.add('active');
             backToFactions();
         } else if (view === 'admin') {
             document.getElementById('adminView').classList.remove('hidden');
-            event.target.classList.add('active');
             if (localStorage.getItem('isAdminLoggedIn') === 'true') {
                 document.getElementById('adminLoginForm').classList.add('hidden');
                 document.getElementById('adminDashboard').classList.remove('hidden');
@@ -443,9 +427,11 @@
         }
     }
 
-    function setCompTab(tab) {
+    function setCompTab(tab, e) {
         document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active-tab'));
-        event.target.classList.add('active-tab');
+        if (e && e.target) {
+            e.target.classList.add('active-tab');
+        }
 
         if (tab === 'create') {
             document.getElementById('tabCreate').classList.remove('hidden');
@@ -493,7 +479,8 @@
                 fileData: fileData || '',
                 status: 'Not Reviewed',
                 adminComment: '',
-                reviewedBy: ''
+                reviewedBy: '',
+                reviewedTime: 0
             };
 
             list.push(report);
@@ -521,7 +508,13 @@
         let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
         const now = Date.now();
 
-        list = list.filter(r => (now - r.time) < 86400000);
+        // Remove only if reviewed and more than 24 hours have passed since review
+        list = list.filter(r => {
+            if (r.status !== 'Not Reviewed' && r.reviewedTime > 0) {
+                return (now - r.reviewedTime) < 86400000;
+            }
+            return true; // Keep unreviewed complaints visible indefinitely until reviewed
+        });
         localStorage.setItem('infinityReports', JSON.stringify(list));
 
         if (filter === 'not_reviewed') {
@@ -620,16 +613,11 @@
 
         const commentInput = document.getElementById(`admComm_${idx}`);
         const comment = commentInput ? commentInput.value : '';
-        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
-
-        let reviewerName = "Infinity_Rakib";
-        if (currentEmail === 'hackonlyuse1@gmail.com') {
-            reviewerName = "Levi_Ackerman";
-        }
 
         list[idx].status = status;
         list[idx].adminComment = comment;
-        list[idx].reviewedBy = reviewerName;
+        list[idx].reviewedBy = "Nate_Harrison";
+        list[idx].reviewedTime = Date.now();
 
         localStorage.setItem('infinityReports', JSON.stringify(list));
         alert('Complaint status successfully locked as ' + status + '!');
