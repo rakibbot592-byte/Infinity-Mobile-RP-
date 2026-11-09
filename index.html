@@ -3,74 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinity Mobile RP - Official Portal</title>
+    <title>Infinity Mobile RP</title>
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(26, 22, 45, 0.85);
-            --border-color: #4c1d95;
+            --card-bg: rgba(15, 12, 35, 0.85);
+            --border-color: #6d28d9;
             --accent-yellow: #facc15;
-            --accent-purple: #8b5cf6;
+            --accent-purple: #9333ea;
             --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --text-muted: #cbd5e1;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
         body {
-            background: linear-gradient(rgba(11, 15, 25, 0.85), rgba(11, 15, 25, 0.95)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+            background: linear-gradient(rgba(11, 15, 25, 0.65), rgba(11, 15, 25, 0.8)), 
+                        url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             color: var(--text-main);
             min-height: 100vh;
-            padding: 10px;
+            padding: 8px;
         }
-        .container { max-width: 1000px; margin: 0 auto; }
+        .container { max-width: 950px; margin: 0 auto; }
         
-        /* Top Navigation Header */
+        /* Compact & Clean Top Header */
         .top-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            padding: 12px 20px;
-            border-radius: 12px;
+            backdrop-filter: blur(12px);
+            padding: 8px 12px;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
-        .header-title { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; color: #fff; }
-        .header-menu { display: flex; gap: 15px; align-items: center; }
-        .nav-link { background: none; border: none; color: var(--text-muted); font-weight: bold; cursor: pointer; font-size: 0.95rem; padding: 5px 10px; border-radius: 6px; }
-        .nav-link.active { color: #fff; background: rgba(139, 92, 246, 0.3); border: 1px solid var(--accent-purple); }
+        .header-title { font-size: 0.95rem; font-weight: bold; color: #fff; white-space: nowrap; }
+        .header-menu { 
+            display: flex; 
+            gap: 5px; 
+            align-items: center; 
+            overflow-x: auto; 
+            max-width: 100%;
+            scrollbar-width: none;
+        }
+        .header-menu::-webkit-scrollbar { display: none; }
         
-        /* Three-dot menu container */
-        .menu-dropdown { position: relative; display: inline-block; }
-        .dot-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 0 5px; }
+        .nav-link { 
+            background: none; 
+            border: none; 
+            color: var(--text-muted); 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            padding: 5px 8px; 
+            border-radius: 5px; 
+            white-space: nowrap; 
+        }
+        .nav-link.active { color: #fff; background: rgba(147, 51, 234, 0.5); border: 1px solid var(--accent-purple); }
+        
+        /* Three-dot menu */
+        .menu-dropdown { position: relative; display: inline-block; flex-shrink: 0; }
+        .dot-btn { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 0 4px; }
         .dropdown-content {
             display: none; position: absolute; right: 0; background: #1e1b4b;
-            min-width: 160px; box-shadow: 0px 8px 16px rgba(0,0,0,0.5);
+            min-width: 140px; box-shadow: 0px 8px 16px rgba(0,0,0,0.5);
             border: 1px solid var(--accent-purple); border-radius: 8px; z-index: 10;
         }
         .dropdown-content button {
-            color: white; padding: 12px 16px; text-decoration: none; display: block;
-            background: none; border: none; width: 100%; text-align: left; cursor: pointer; font-size: 0.9rem;
+            color: white; padding: 10px 12px; display: block;
+            background: none; border: none; width: 100%; text-align: left; cursor: pointer; font-size: 0.85rem;
         }
-        .dropdown-content button:hover { background: rgba(139, 92, 246, 0.4); }
+        .dropdown-content button:hover { background: rgba(147, 51, 234, 0.4); }
         .show { display: block; }
 
         /* Hero & Game Info Section */
         .hero-section {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 30px 20px;
+            padding: 20px 15px;
             text-align: center;
             margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
+        .game-info { text-align: left; margin-bottom: 15px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+        .game-info h3 { color: #fff; margin-bottom: 6px; font-size: 1.1rem; }
+
         .download-btn {
             background: var(--accent-yellow);
             color: #000;
-            padding: 14px 30px;
-            font-size: 1.1rem;
+            padding: 12px 25px;
+            font-size: 1rem;
             font-weight: bold;
             border: none;
             border-radius: 8px;
@@ -78,22 +103,20 @@
             text-decoration: none;
             display: inline-block;
             box-shadow: 0 4px 15px rgba(250, 204, 21, 0.4);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             transition: 0.2s;
         }
         .download-btn:hover { transform: scale(1.02); background: #fde047; }
-        .game-info { text-align: left; margin-top: 15px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
-        .game-info h3 { color: #fff; margin-bottom: 8px; font-size: 1.1rem; }
 
-        /* Game Screenshots Gallery Grid */
+        /* Game Screenshots Gallery Grid (Clean & Fixed) */
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
         }
         .gallery-item {
-            background: rgba(11, 15, 25, 0.8);
+            background: rgba(11, 15, 25, 0.6);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             overflow: hidden;
@@ -109,22 +132,24 @@
         /* Complaints Layout */
         .complaints-wrapper {
             display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 15px;
+            grid-template-columns: 220px 1fr;
+            gap: 12px;
         }
         @media (max-width: 768px) {
             .complaints-wrapper { grid-template-columns: 1fr; }
         }
-        .sidebar-menu { display: flex; flex-direction: column; gap: 8px; }
+        .sidebar-menu { display: flex; flex-direction: column; gap: 6px; }
         .sidebar-btn {
             background: var(--card-bg);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            padding: 12px 15px;
+            padding: 10px 12px;
             text-align: left;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
+            font-size: 0.85rem;
             transition: 0.2s;
         }
         .sidebar-btn.active-tab, .sidebar-btn:hover {
@@ -135,37 +160,38 @@
 
         .content-panel {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 20px;
-            min-height: 400px;
+            padding: 15px;
+            min-height: 380px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
 
         /* Commands Section Styling */
         .faction-category-title {
             color: var(--accent-yellow);
-            font-size: 1.05rem;
-            margin: 15px 0 10px 0;
+            font-size: 1rem;
+            margin: 12px 0 8px 0;
             font-weight: bold;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 5px;
+            padding-bottom: 4px;
         }
         .faction-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
         }
         .faction-card {
-            background: rgba(11, 15, 25, 0.7);
+            background: rgba(11, 15, 25, 0.6);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-main);
             transition: 0.2s;
         }
@@ -174,34 +200,34 @@
             border-color: var(--accent-purple);
         }
         .command-box {
-            background: rgba(11, 15, 25, 0.8);
+            background: rgba(11, 15, 25, 0.7);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
+            padding: 12px;
+            margin-top: 12px;
         }
 
         /* Form styling */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted); }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 4px; font-size: 0.85rem; color: var(--text-muted); }
         .form-control {
             width: 100%; background: rgba(11, 15, 25, 0.6);
             border: 1px solid var(--border-color); border-radius: 6px;
-            padding: 10px; color: #fff; font-size: 0.95rem;
+            padding: 8px; color: #fff; font-size: 0.9rem;
         }
-        textarea.form-control { height: 100px; resize: none; }
+        textarea.form-control { height: 90px; resize: none; }
         
         /* Feed items */
         .feed-card {
             background: rgba(11, 15, 25, 0.6);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
         }
-        .feed-header { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--accent-yellow); margin-bottom: 5px; }
-        .feed-desc { font-size: 0.9rem; margin-bottom: 8px; color: var(--text-main); }
-        .badge { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .feed-header { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--accent-yellow); margin-bottom: 4px; }
+        .feed-desc { font-size: 0.85rem; margin-bottom: 6px; color: var(--text-main); }
+        .badge { padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
         .badge-pending { background: #eab308; color: #000; }
         .badge-reviewed { background: #10b981; color: #fff; }
         .badge-rejected { background: #ef4444; color: #fff; }
@@ -209,7 +235,7 @@
         .hidden { display: none !important; }
         .btn-submit {
             background: var(--accent-yellow); color: #000; font-weight: bold;
-            border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%;
+            border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.95rem;
         }
     </style>
 </head>
@@ -218,7 +244,7 @@
 <div class="container">
     <!-- Top Header -->
     <div class="top-header">
-        <div class="header-title">INFINITY MOBILE RP</div>
+        <div class="header-title">INFINITY RP</div>
         <div class="header-menu">
             <button class="nav-link active" onclick="switchView('portal')">HOME</button>
             <button class="nav-link" onclick="switchView('complaints')">COMPLAINTS</button>
@@ -237,20 +263,19 @@
     <!-- Main Portal View -->
     <div id="portalView">
         <div class="hero-section">
-            <a href="https://www.dropbox.com/scl/fi/kygvl9xizmso7cmn1kbvl/Infinity-Mobile-RP.apk?rlkey=78vyq949lt9itvv9cn1dnqest&st=um3ltccj&dl=1" class="download-btn" target="_blank">DOWNLOAD GAME APK</a>
-            
             <div class="game-info">
                 <h3>About Infinity Mobile RP</h3>
                 <p>Welcome to Infinity Mobile RP – the ultimate mobile roleplaying experience. Immerse yourself in a living, breathing virtual world where your choices shape your destiny. Become a dedicated law enforcement officer protecting the streets, join criminal syndicates to build your empire, launch your own business enterprises, own luxurious real estate, achieve ultimate wealth, and live a rich lifestyle with thousands of active players.</p>
             </div>
 
-            <!-- Game Screenshots Gallery (Direct In-Game SS) -->
+            <a href="https://www.dropbox.com/scl/fi/kygvl9xizmso7cmn1kbvl/Infinity-Mobile-RP.apk?rlkey=78vyq949lt9itvv9cn1dnqest&st=um3ltccj&dl=1" class="download-btn" target="_blank">DOWNLOAD GAME APK</a>
+
+            <!-- Game Screenshots Gallery (Clean Links) -->
             <div class="gallery-grid">
-                <div class="gallery-item"><img src="2138_2.jpg" alt="Casino Meetup[span_0](start_span)[span_0](end_span)"></div>
-                <div class="gallery-item"><img src="1748_2.jpg" alt="Snowmobile Ride[span_1](start_span)[span_1](end_span)"></div>
-                <div class="gallery-item"><img src="1746.jpg" alt="Military Cars Convoy[span_2](start_span)[span_2](end_span)"></div>
-                <div class="gallery-item"><img src="1449.jpg" alt="Luxury Yacht River[span_3](start_span)[span_3](end_span)"></div>
-                <div class="gallery-item"><img src="1116_2.jpg" alt="Medieval Castle Area[span_4](start_span)[span_4](end_span)"></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=600&auto=format&fit=crop" alt="Game View"></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?q=80&w=600&auto=format&fit=crop" alt="Game View"></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600&auto=format&fit=crop" alt="Game View"></div>
+                <div class="gallery-item"><img src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=600&auto=format&fit=crop" alt="Game View"></div>
             </div>
         </div>
     </div>
@@ -270,7 +295,7 @@
             <div class="content-panel">
                 <!-- Create Complaint Tab -->
                 <div id="tabCreate">
-                    <h3 style="margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-yellow);">Create Complaint</h3>
+                    <h3 style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">Create Complaint</h3>
                     <form id="complaintForm" onsubmit="submitComplaint(event)">
                         <div class="form-group">
                             <label>Complaint Type</label>
@@ -316,7 +341,7 @@
 
                 <!-- Feed View Tab -->
                 <div id="tabFeed" class="hidden">
-                    <h3 id="feedTitle" style="margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-yellow);">All Complaints (Last 24 Hours)</h3>
+                    <h3 id="feedTitle" style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">All Complaints (Last 24 Hours)</h3>
                     <div id="complaintsFeedList"></div>
                 </div>
             </div>
@@ -326,7 +351,7 @@
     <!-- Commands Factions View -->
     <div id="commandsView" class="hidden">
         <div class="content-panel">
-            <h3 style="color: var(--accent-yellow); margin-bottom: 15px; font-size: 1.2rem;">Faction Commands Directory</h3>
+            <h3 style="color: var(--accent-yellow); margin-bottom: 12px; font-size: 1.1rem;">Faction Commands Directory</h3>
             
             <div id="factionSelectionArea">
                 <div class="faction-category-title">===== [State Organization] =====</div>
@@ -351,20 +376,20 @@
 
             <!-- Faction Detail Command Box -->
             <div id="factionCommandDetail" class="hidden">
-                <button onclick="backToFactions()" style="background:var(--accent-purple); color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; margin-bottom:15px; font-weight:bold;">← Back to Factions</button>
-                <h4 id="selectedFactionTitle" style="color: var(--accent-yellow); margin-bottom: 10px; font-size: 1.1rem;"></h4>
+                <button onclick="backToFactions()" style="background:var(--accent-purple); color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-bottom:12px; font-weight:bold; font-size:0.85rem;">← Back to Factions</button>
+                <h4 id="selectedFactionTitle" style="color: var(--accent-yellow); margin-bottom: 8px; font-size: 1rem;"></h4>
                 <div class="command-box">
-                    <p id="factionCommandsList" style="color: var(--text-muted); font-size: 0.95rem;">Commands for this faction will be added soon. Stay tuned!</p>
+                    <p id="factionCommandsList" style="color: var(--text-muted); font-size: 0.9rem;">Commands for this faction will be added soon. Stay tuned!</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Admin Login / Dashboard Modal View -->
-    <div id="adminView" class="hidden" style="margin-top: 20px;">
-        <div class="content-panel" style="max-width: 500px; margin: 0 auto;">
+    <div id="adminView" class="hidden" style="margin-top: 15px;">
+        <div class="content-panel" style="max-width: 480px; margin: 0 auto;">
             <div id="adminLoginForm">
-                <h3 style="margin-bottom: 15px; color: var(--accent-yellow);">Admin Login</h3>
+                <h3 style="margin-bottom: 12px; color: var(--accent-yellow);">Admin Login</h3>
                 <div class="form-group">
                     <label>Admin Gmail</label>
                     <input type="email" id="admEmail" class="form-control" placeholder="Enter admin gmail">
@@ -377,9 +402,9 @@
             </div>
 
             <div id="adminDashboard" class="hidden">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="color: var(--accent-yellow);">Admin Review Dashboard</h3>
-                    <button onclick="adminLogout()" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Logout</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="color: var(--accent-yellow); font-size: 1.05rem;">Admin Review Dashboard</h3>
+                    <button onclick="adminLogout()" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Logout</button>
                 </div>
                 <div id="adminReviewList"></div>
             </div>
@@ -418,7 +443,6 @@
     function openFactionCommands(factionName) {
         document.getElementById('factionSelectionArea').classList.add('hidden');
         document.getElementById('factionCommandDetail').classList.remove('hidden');
-        document.getElementById('selectedFactionTitleinnerText').textContent = factionName;
         document.getElementById('selectedFactionTitle').innerText = factionName + " Commands";
     }
 
@@ -574,7 +598,7 @@
         }
 
         if (list.length === 0) {
-            feedList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">No complaints found.</p>';
+            feedList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:15px;">No complaints found.</p>';
             return;
         }
 
@@ -585,10 +609,10 @@
             
             let evidenceHtml = '';
             if (r.evidenceUrl) {
-                evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.85rem; display:block; margin-bottom:5px;">View YouTube/URL Evidence</a>`;
+                evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.8rem; display:block; margin-bottom:4px;">View YouTube/URL Evidence</a>`;
             }
             if (r.fileData) {
-                evidenceHtml += `<div style="margin-top:5px;"><img src="${r.fileData}" style="max-width:100%; height:120px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"></div>`;
+                evidenceHtml += `<div style="margin-top:4px;"><img src="${r.fileData}" style="max-width:100%; height:110px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"></div>`;
             }
 
             div.innerHTML = `
@@ -596,11 +620,11 @@
                     <span>${r.idStr} &nbsp; ${r.dateStr}</span>
                     <span class="badge ${badgeClass}">${r.status}</span>
                 </div>
-                <div style="font-weight:bold; font-size:0.95rem; margin-bottom:4px;">${r.title}</div>
+                <div style="font-weight:bold; font-size:0.9rem; margin-bottom:3px;">${r.title}</div>
                 <div class="feed-desc">${r.desc}</div>
                 ${evidenceHtml}
-                ${r.reviewedBy ? `<div style="font-size:0.8rem; color:var(--accent-yellow); margin-top:5px;">Reviewed By: <strong>${r.reviewedBy}</strong></div>` : ''}
-                ${r.adminComment ? `<div style="background:rgba(139,92,246,0.2); padding:6px; border-left:3px solid var(--accent-purple); font-size:0.85rem; margin-top:5px;"><strong>Admin Comment:</strong> ${r.adminComment}</div>` : ''}
+                ${r.reviewedBy ? `<div style="font-size:0.78rem; color:var(--accent-yellow); margin-top:4px;">Reviewed By: <strong>${r.reviewedBy}</strong></div>` : ''}
+                ${r.adminComment ? `<div style="background:rgba(147,51,234,0.25); padding:5px; border-left:3px solid var(--accent-purple); font-size:0.8rem; margin-top:4px;"><strong>Admin Comment:</strong> ${r.adminComment}</div>` : ''}
             `;
             feedList.appendChild(div);
         });
@@ -623,32 +647,32 @@
 
             let evidenceHtml = '';
             if (r.evidenceUrl) {
-                evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.85rem; display:block; margin-bottom:5px;">View Evidence Link</a>`;
+                evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.8rem; display:block; margin-bottom:4px;">View Evidence Link</a>`;
             }
             if (r.fileData) {
-                evidenceHtml += `<div style="margin-top:5px;"><img src="${r.fileData}" style="max-width:100%; height:120px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"></div>`;
+                evidenceHtml += `<div style="margin-top:4px;"><img src="${r.fileData}" style="max-width:100%; height:110px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"></div>`;
             }
 
             let actionButtons = '';
             if (r.status !== 'Not Reviewed') {
-                actionButtons = `<div style="color:#10b981; font-weight:bold; font-size:0.85rem;">Status Locked (${r.status} by ${r.reviewedBy})</div>`;
+                actionButtons = `<div style="color:#10b981; font-weight:bold; font-size:0.8rem;">Status Locked (${r.status} by ${r.reviewedBy})</div>`;
             } else {
                 actionButtons = `
-                    <input type="text" id="admComm_${realIdx}" class="form-control" placeholder="Write admin feedback..." style="margin-bottom:8px; font-size:0.85rem;">
-                    <div style="display:flex; gap:6px;">
-                        <button onclick="updateReportStatus(${realIdx}, 'Reviewed')" style="background:#10b981; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Review / Accept</button>
-                        <button onclick="updateReportStatus(${realIdx}, 'Rejected')" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Reject</button>
-                        <button onclick="deleteReport(${realIdx})" style="background:#475569; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Delete</button>
+                    <input type="text" id="admComm_${realIdx}" class="form-control" placeholder="Write admin feedback..." style="margin-bottom:6px; font-size:0.8rem;">
+                    <div style="display:flex; gap:5px;">
+                        <button onclick="updateReportStatus(${realIdx}, 'Reviewed')" style="background:#10b981; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Review / Accept</button>
+                        <button onclick="updateReportStatus(${realIdx}, 'Rejected')" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Reject</button>
+                        <button onclick="deleteReport(${realIdx})" style="background:#475569; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem;">Delete</button>
                     </div>
                 `;
             }
 
             div.innerHTML = `
                 <div class="feed-header"><span>${r.idStr} (${r.status})</span><span>${r.dateStr}</span></div>
-                <div style="font-weight:bold; font-size:0.9rem;">${r.title}</div>
-                <div style="font-size:0.85rem; margin:5px 0;">${r.desc}</div>
+                <div style="font-weight:bold; font-size:0.85rem;">${r.title}</div>
+                <div style="font-size:0.8rem; margin:4px 0;">${r.desc}</div>
                 ${evidenceHtml}
-                <div style="margin-top:8px;">${actionButtons}</div>
+                <div style="margin-top:6px;">${actionButtons}</div>
             `;
             reviewList.appendChild(div);
         });
