@@ -1,293 +1,500 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Infinity Mobile RP - Portal</title>
-<style>
-:root {
---primary: #6366f1;
---bg: #0f172a;
---card: #1e293b;
---text: #f8fafc;
---border: #334155;
-}
-body {
-background: var(--bg);
-color: var(--text);
-font-family: Arial, sans-serif;
-margin: 0;
-padding: 15px;
-}
-.container { max-width: 800px; margin: 0 auto; }
-.card { background: var(--card); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--border); }
-h1, h2 { text-align: center; color: #fff; }
-.btn {
-display: block; width: 100%; background: var(--primary); color: white;
-padding: 12px; border: none; border-radius: 6px; font-weight: bold;
-cursor: pointer; text-align: center; text-decoration: none; margin-top: 10px;
-box-sizing: border-box;
-}
-.btn-red { background: #ef4444; }
-.btn-green { background: #10b981; }
-label { display: block; margin-top: 12px; font-weight: bold; }
-select, input, textarea {
-width: 100%; padding: 10px; margin-top: 5px; border-radius: 6px;
-border: 1px solid var(--border); background: var(--bg); color: white; box-sizing: border-box;
-}
-textarea { height: 80px; }
-.hidden { display: none !important; }
-.report-item { background: rgba(15, 23, 42, 0.7); padding: 12px; border-radius: 6px; margin-top: 10px; border: 1px solid var(--border); }
-.badge { padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
-.badge-pending { background: #eab308; color: #000; }
-.badge-accepted { background: #10b981; color: #fff; }
-.badge-rejected { background: #ef4444; color: #fff; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Mobile RP - Official Portal</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(26, 22, 45, 0.75);
+            --border-color: #4c1d95;
+            --accent-yellow: #facc15;
+            --accent-purple: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background: linear-gradient(rgba(11, 15, 25, 0.85), rgba(11, 15, 25, 0.95)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 10px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        /* Top Navigation Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .header-title { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; color: #fff; }
+        .header-menu { display: flex; gap: 15px; align-items: center; }
+        .nav-link { background: none; border: none; color: var(--text-muted); font-weight: bold; cursor: pointer; font-size: 0.95rem; padding: 5px 10px; border-radius: 6px; }
+        .nav-link.active { color: #fff; background: rgba(139, 92, 246, 0.3); border: 1px solid var(--accent-purple); }
+        
+        /* Three-dot menu container */
+        .menu-dropdown { position: relative; display: inline-block; }
+        .dot-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; padding: 0 5px; }
+        .dropdown-content {
+            display: none; position: absolute; right: 0; background: #1e1b4b;
+            min-width: 160px; box-shadow: 0px 8px 16px rgba(0,0,0,0.5);
+            border: 1px solid var(--accent-purple); border-radius: 8px; z-index: 10;
+        }
+        .dropdown-content button {
+            color: white; padding: 12px 16px; text-decoration: none; display: block;
+            background: none; border: none; width: 100%; text-align: left; cursor: pointer; font-size: 0.9rem;
+        }
+        .dropdown-content button:hover { background: rgba(139, 92, 246, 0.4); }
+        .show { display: block; }
+
+        /* Hero & Game Info Section */
+        .hero-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .download-btn {
+            background: var(--accent-yellow);
+            color: #000;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.4);
+            margin-bottom: 20px;
+            transition: 0.2s;
+        }
+        .download-btn:hover { transform: scale(1.02); background: #fde047; }
+        .game-info { text-align: left; margin-top: 15px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+        .game-info h3 { color: #fff; margin-bottom: 8px; font-size: 1.1rem; }
+
+        /* Complaints Layout matching user screenshots */
+        .complaints-wrapper {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 768px) {
+            .complaints-wrapper { grid-template-columns: 1fr; }
+        }
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .sidebar-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 12px 15px;
+            text-align: left;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .sidebar-btn.active-tab, .sidebar-btn:hover {
+            background: var(--accent-yellow);
+            color: #000;
+            border-color: var(--accent-yellow);
+        }
+
+        .content-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        /* Form styling */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; color: var(--text-muted); }
+        .form-control {
+            width: 100%; background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--border-color); border-radius: 6px;
+            padding: 10px; color: #fff; font-size: 0.95krem;
+        }
+        textarea.form-control { height: 100px; resize: none; }
+        
+        /* Feed items */
+        .feed-card {
+            background: rgba(11, 15, 25, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+        .feed-header { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--accent-yellow); margin-bottom: 5px; }
+        .feed-desc { font-size: 0.9rem; margin-bottom: 8px; color: var(--text-main); }
+        .badge { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .badge-pending { background: #eab308; color: #000; }
+        .badge-reviewed { background: #10b981; color: #fff; }
+        .badge-rejected { background: #ef4444; color: #fff; }
+
+        .hidden { display: none !important; }
+        .btn-submit {
+            background: var(--accent-yellow); color: #000; font-weight: bold;
+            border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-<h1>Infinity Mobile RP</h1>
+    <!-- Top Header -->
+    <div class="top-header">
+        <div class="header-title">INFINITY MOBILE RP</div>
+        <div class="header-menu">
+            <button class="nav-link active" onclick="switchView('portal')">HOME</button>
+            <button class="nav-link" onclick="switchView('complaints')">COMPLAINTS</button>
+            
+            <!-- Three Dot Admin Menu -->
+            <div class="menu-dropdown">
+                <button class="dot-btn" onclick="toggleDropdown()">⋮</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <button onclick="openAdminLogin()">Admin Panel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Game Download Button -->
-<div class="card" style="text-align: center;">
-<a href="https://www.dropbox.com/scl/fi/kygvl9xizmso7cmn1kbvl/Infinity-Mobile-RP.apk?rlkey=78vyq949lt9itvv9cn1dnqest&st=um3ltccj&dl=1" class="btn" target="_blank">Download Game APK</a>
-</div>
+    <!-- Main Portal View -->
+    <div id="portalView">
+        <div class="hero-section">
+            <a href="https://www.dropbox.com/scl/fi/kygvl9xizmso7cmn1kbvl/Infinity-Mobile-RP.apk?rlkey=78vyq949lt9itvv9cn1dnqest&st=um3ltccj&dl=1" class="download-btn" target="_blank">DOWNLOAD GAME APK</a>
+            
+            <div class="game-info">
+                <h3>About Infinity Mobile RP</h3>
+                <p>Welcome to Infinity Mobile RP – the ultimate mobile roleplaying experience. Immerse yourself in a living, breathing virtual world where your choices shape your destiny. Become a dedicated law enforcement officer protecting the streets, join criminal syndicates to build your empire, launch your own business enterprises, own luxurious real estate, achieve ultimate wealth, and live a rich lifestyle with thousands of active players.</p>
+            </div>
+        </div>
+    </div>
 
-<!-- 24-Hour Public Complaint Feed -->
-<div class="card">
-<h2>Recent Reports (Last 24 Hours)</h2>
-<div id="publicFeed">Loading reports...</div>
-</div>
+    <!-- Complaints System View -->
+    <div id="complaintsView" class="hidden">
+        <div class="complaints-wrapper">
+            <!-- Sidebar Menu (Matching Screenshot) -->
+            <div class="sidebar-menu">
+                <button class="sidebar-btn active-tab" onclick="setCompTab('create')">CREATE COMPLAINT</button>
+                <button class="sidebar-btn" onclick="setCompTab('all')">ALL COMPLAINTS</button>
+                <button class="sidebar-btn" onclick="setCompTab('not_reviewed')">NOT REVIEWED</button>
+                <button class="sidebar-btn" onclick="setCompTab('reviewed')">REVIEWED</button>
+            </div>
 
-<!-- Submit Complaint Form -->
-<div class="card">
-<h2>Submit Complaint</h2>
-<form id="compForm">
-<label>Complaint Type</label>
-<select id="typeSelect" onchange="toggleForm()" required>
-<option value="">-- Select Type --</option>
-<option value="technical">Technical Issue</option>
-<option value="player">Complain Against Player</option>
-</select>
+            <!-- Content Area -->
+            <div class="content-panel">
+                <!-- Create Complaint Tab -->
+                <div id="tabCreate">
+                    <h3 style="margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-yellow);">Create Complaint</h3>
+                    <form id="complaintForm" onsubmit="submitComplaint(event)">
+                        <div class="form-group">
+                            <label>Complaint Type</label>
+                            <select id="compCategory" class="form-control" onchange="toggleCategoryFields()" required>
+                                <option value="player">Complaint Against a Player / Admin</option>
+                                <option value="technical">Technical Issue</option>
+                            </select>
+                        </div>
 
-<div id="techFields" class="hidden">
-<label>Your Name</label>
-<input type="text" id="tName" placeholder="Your full name">
-<label>Description</label>
-<textarea id="tDesc" placeholder="Describe issue..."></textarea>
-</div>
+                        <div id="playerFields">
+                            <div class="form-group">
+                                <label>Your In-Game Nickname (Name_Surname)</label>
+                                <input type="text" id="cAuthor" class="form-control" placeholder="e.g. Peter_Nikolas">
+                            </div>
+                            <div class="form-group">
+                                <label>Accused Player Nickname (Name_Surname)</label>
+                                <input type="text" id="cTarget" class="form-control" placeholder="e.g. Dipu_Valenta">
+                            </div>
+                            <div class="form-group">
+                                <label>Violated Rule Points (e.g. 3, 5, 7)</label>
+                                <input type="text" id="cRules" class="form-control" placeholder="3, 5, 7">
+                            </div>
+                        </div>
 
-<div id="playerFields" class="hidden">
-<label>Your In-Game Name</label>
-<input type="text" id="pYou" placeholder="Your name">
-<label>Accused Player Name</label>
-<input type="text" id="pTarget" placeholder="Target player name">
-<label>Rule Violated</label>
-<input type="text" id="pRule" placeholder="e.g. 2.1GR">
-<label>Situation Details</label>
-<textarea id="pSit" placeholder="Describe situation..."></textarea>
-</div>
+                        <div class="form-group">
+                            <label>Description (Briefly describe the situation, max 350 chars)</label>
+                            <textarea id="cDesc" class="form-control" maxlength="350" placeholder="Briefly describe the situation..." required></textarea>
+                        </div>
 
-<div id="evidenceField" class="hidden">
-<label>Evidence Link (YouTube/Imgur)</label>
-<input type="url" id="evUrl" placeholder="https://youtube.com/...">
-</div>
+                        <div class="form-group">
+                            <label>Evidence (YouTube Link or Image URL)</label>
+                            <input type="url" id="cEvidence" class="form-control" placeholder="https://youtube.com/... or https://imgur.com/...">
+                        </div>
 
-<button type="submit" class="btn" style="margin-top: 15px;">Submit Report</button>
-</form>
-</div>
+                        <button type="submit" class="btn-submit">SUBMIT COMPLAINT</button>
+                    </form>
+                </div>
 
-<!-- Admin Login Section -->
-<div class="card" id="loginCard">
-<h2>Admin Login</h2>
-<label>Admin Gmail</label>
-<input type="email" id="aEmail" placeholder="Enter Gmail">
-<label>Password</label>
-<input type="password" id="aPass" placeholder="Enter Password">
-<button type="button" class="btn" onclick="adminLogin()">Login to Dashboard</button>
-</div>
+                <!-- Feed View Tab -->
+                <div id="tabFeed" class="hidden">
+                    <h3 id="feedTitle" style="margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-yellow);">All Complaints (Last 24 Hours)</h3>
+                    <div id="complaintsFeedList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<!-- Protected Admin Dashboard Section -->
-<div class="card hidden" id="dashCard">
-<div style="display: flex; justify-content: space-between; align-items: center;">
-<h2>Admin Dashboard</h2>
-<button type="button" class="btn btn-red" style="width: auto; padding: 5px 12px;" onclick="adminLogout()">Logout</button>
-</div>
-<div id="adminList"></div>
-</div>
+    <!-- Admin Login / Dashboard Modal View -->
+    <div id="adminView" class="hidden" style="margin-top: 20px;">
+        <div class="content-panel" style="max-width: 500px; margin: 0 auto;">
+            <div id="adminLoginForm">
+                <h3 style="margin-bottom: 15px; color: var(--accent-yellow);">Admin Login</h3>
+                <div class="form-group">
+                    <label>Admin Gmail</label>
+                    <input type="email" id="admEmail" class="form-control" placeholder="Enter admin gmail">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="admPass" class="form-control" placeholder="Enter password">
+                </div>
+                <button type="button" class="btn-submit" onclick="verifyAdmin()">LOGIN TO DASHBOARD</button>
+            </div>
 
-<!-- Fix Memory Clear Button -->
-<div style="text-align: center; margin-top: 20px;">
-<button type="button" onclick="clearSiteCache()" style="background: transparent; color: #64748b; border: 1px solid #475569; padding: 6px 12px; border-radius: 4px; font-size: 12px; cursor: pointer;">Fix / Reset Stuck Data</button>
-</div>
+            <div id="adminDashboard" class="hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: var(--accent-yellow);">Admin Review Dashboard</h3>
+                    <button onclick="adminLogout()" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Logout</button>
+                </div>
+                <div id="adminReviewList"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-const admins = {
-"rakibbot592@gmail.com": "0507",
-"hackonlyuse1@gmail.com": "Anything"
-};
+    const admins = {
+        "rakibbot592@gmail.com": "0507",
+        "hackonlyuse1@gmail.com": "Anything"
+    };
 
-function toggleForm() {
-const val = document.getElementById('typeSelect').value;
-const tech = document.getElementById('techFields');
-const player = document.getElementById('playerFields');
-const ev = document.getElementById('evidenceField');
+    function switchView(view) {
+        document.getElementById('portalView').classList.add('hidden');
+        document.getElementById('complaintsView').classList.add('hidden');
+        document.getElementById('adminView').classList.add('hidden');
 
-tech.classList.add('hidden');
-player.classList.add('hidden');
-ev.classList.add('hidden');
+        document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
 
-if (val === 'technical') {
-tech.classList.remove('hidden');
-ev.classList.remove('hidden');
-} else if (val === 'player') {
-player.classList.remove('hidden');
-ev.classList.remove('hidden');
-}
-}
+        if (view === 'portal') {
+            document.getElementById('portalView').classList.remove('hidden');
+            event.target.classList.add('active');
+        } else if (view === 'complaints') {
+            document.getElementById('complaintsView').classList.remove('hidden');
+            event.target.classList.add('active');
+            loadComplaintsFeed('all');
+        }
+    }
 
-document.getElementById('compForm').addEventListener('submit', function(e) {
-e.preventDefault();
-const type = document.getElementById('typeSelect').value;
-if (!type) return alert('Please select a complaint type!');
+    function toggleDropdown() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
 
-let report = {
-id: Date.now(),
-time: Date.now(),
-dateStr: new Date().toLocaleString(),
-type: type,
-status: 'Pending',
-comment: '',
-url: document.getElementById('evUrl').value
-};
+    window.onclick = function(event) {
+        if (!event.target.matches('.dot-btn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (let i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
 
-if (type === 'technical') {
-report.title = "Tech Issue: " + document.getElementById('tName').value;
-report.desc = document.getElementById('tDesc').value;
-} else {
-report.title = "Player Report: " + document.getElementById('pYou').value + " vs " + document.getElementById('pTarget').value;
-report.desc = "Rule: " + document.getElementById('pRule').value + " | " + document.getElementById('pSit').value;
-}
+    function openAdminLogin() {
+        document.getElementById('portalView').classList.add('hidden');
+        document.getElementById('complaintsView').classList.add('hidden');
+        document.getElementById('adminView').classList.remove('hidden');
+        if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+            document.getElementById('adminLoginForm').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            loadAdminReviews();
+        }
+    }
 
-let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-list.push(report);
-localStorage.setItem('infinityReports', JSON.stringify(list));
+    function verifyAdmin() {
+        const email = document.getElementById('admEmail').value.trim().toLowerCase();
+        const pass = document.getElementById('admPass').value;
+        if (admins[email] && admins[email] === pass) {
+            localStorage.setItem('isAdminLoggedIn', 'true');
+            document.getElementById('adminLoginForm').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            loadAdminReviews();
+        } else {
+            alert('Invalid Admin Gmail or Password!');
+        }
+    }
 
-alert('Report Submitted Successfully!');
-this.reset();
-toggleForm();
-loadPublicFeed();
-});
+    function adminLogout() {
+        localStorage.removeItem('isAdminLoggedIn');
+        document.getElementById('adminDashboard').classList.add('hidden');
+        document.getElementById('adminLoginForm').classList.remove('hidden');
+    }
 
-function loadPublicFeed() {
-const feed = document.getElementById('publicFeed');
-feed.innerHTML = '';
-let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-const now = Date.now();
+    function toggleCategoryFields() {
+        const cat = document.getElementById('compCategory').value;
+        const playerFields = document.getElementById('playerFields');
+        if (cat === 'technical') {
+            playerFields.classList.add('hidden');
+        } else {
+            playerFields.classList.remove('hidden');
+        }
+    }
 
-// 24 Hours Auto Filter
-list = list.filter(r => (now - r.time) < 86400000);
-localStorage.setItem('infinityReports', JSON.stringify(list));
+    function setCompTab(tab) {
+        document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active-tab'));
+        event.target.classList.add('active-tab');
 
-if (list.length === 0) {
-feed.innerHTML = '<p style="text-align:center; color:#94a3b8;">No reports submitted in the last 24 hours.</p>';
-return;
-}
+        if (tab === 'create') {
+            document.getElementById('tabCreate').classList.remove('hidden');
+            document.getElementById('tabFeed').classList.add('hidden');
+        } else {
+            document.getElementById('tabCreate').classList.add('hidden');
+            document.getElementById('tabFeed').classList.remove('hidden');
+            loadComplaintsFeed(tab);
+        }
+    }
 
-list.slice().reverse().forEach(r => {
-let badgeClass = r.status === 'Accepted' ? 'badge-accepted' : (r.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
-let div = document.createElement('div');
-div.className = 'report-item';
-div.innerHTML = &lt;div style="display:flex; justify-content:space-between; align-items:center;"&gt; &lt;strong&gt;${r.title}</strong>
-<span class="badge ${badgeClass}"&gt;${r.status}</span>
-</div>
-<p style="margin:5px 0; font-size:0.9rem;">${r.desc}&lt;/p&gt; ${r.url ? <a href="${r.url}" target="_blank" style="color:#818cf8; font-size:0.85rem;">View Evidence</a>: ''} &lt;div style="font-size:0.75rem; color:#94a3b8; margin-top:5px;"&gt;Submitted: ${r.dateStr}</div>
-${r.comment ?<div style="background:rgba(99,102,241,0.2); padding:6px; margin-top:5px; border-left:3px solid var(--primary); font-size:0.85rem;"><strong>Admin Response:</strong> ${r.comment}&lt;/div> : ''}
-`;
-feed.appendChild(div);
-});
-}
+    function submitComplaint(e) {
+        e.preventDefault();
+        const category = document.getElementById('compCategory').value;
+        const desc = document.getElementById('cDesc').value;
+        const evidence = document.getElementById('cEvidence').value;
+        const now = new Date();
+        const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
 
-function adminLogin() {
-const email = document.getElementById('aEmail').value.trim().toLowerCase();
-const pass = document.getElementById('aPass').value;
+        let title = "";
+        if (category === 'technical') {
+            title = "Technical Issue Report";
+        } else {
+            const author = document.getElementById('cAuthor').value || "Unknown";
+            const target = document.getElementById('cTarget').value || "Unknown";
+            const rules = document.getElementById('cRules').value || "N/A";
+            title = `From ${author} against ${target} (Rules: ${rules})`;
+        }
 
-if (admins[email] && admins[email] === pass) {
-localStorage.setItem('adminAuthSession', 'active');
-showDash();
-} else {
-alert('Wrong Admin Email or Password!');
-}
-}
+        let report = {
+            id: Math.floor(100000 + Math.random() * 900000),
+            time: Date.now(),
+            dateStr: dateStr,
+            category: category,
+            title: title,
+            desc: desc,
+            evidence: evidence,
+            status: 'Not Reviewed',
+            adminComment: ''
+        };
 
-function showDash() {
-document.getElementById('loginCard').classList.add('hidden');
-document.getElementById('dashCard').classList.remove('hidden');
-loadAdminList();
-}
+        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        list.push(report);
+        localStorage.setItem('infinityReports', JSON.stringify(list));
 
-function adminLogout() {
-localStorage.removeItem('adminAuthSession');
-document.getElementById('dashCard').classList.add('hidden');
-document.getElementById('loginCard').classList.remove('hidden');
-}
+        alert('Complaint created successfully!');
+        document.getElementById('complaintForm').reset();
+        setCompTab('all');
+    }
 
-function loadAdminList() {
-const box = document.getElementById('adminList');
-box.innerHTML = '';
-let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+    function loadComplaintsFeed(filter) {
+        const feedList = document.getElementById('complaintsFeedList');
+        feedList.innerHTML = '';
+        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        const now = Date.now();
 
-if (list.length === 0) {
-box.innerHTML = '<p style="text-align:center; margin-top:10px;">No active reports to review.</p>';
-return;
-}
+        // 24 Hours filter
+        list = list.filter(r => (now - r.time) < 86400000);
+        localStorage.setItem('infinityReports', JSON.stringify(list));
 
-list.slice().reverse().forEach((r, idx) => {
-let realIdx = list.length - 1 - idx;
-let div = document.createElement('div');
-div.className = 'report-item';
-div.innerHTML = &lt;strong&gt;${r.title}</strong> ({r.desc}</p>
-<input type="text" id="comm_{r.comment || ''}" placeholder="Write admin comment..." style="margin-bottom:5px;">
-<div style="display:flex; gap:5px;">
-<button type="button" class="btn btn-green" style="padding:6px;" onclick="updateStatus({realIdx}, 'Rejected')">Reject</button>
-<button type="button" class="btn btn-red" style="background:#475569; padding:6px;" onclick="deleteReport(${realIdx})"&gt;Delete&lt;/button&gt; &lt;/div&gt;;
-box.appendChild(div);
-});
-}
+        if (filter === 'not_reviewed') {
+            list = list.filter(r => r.status === 'Not Reviewed');
+        } else if (filter === 'reviewed') {
+            list = list.filter(r => r.status === 'Reviewed' || r.status === 'Rejected');
+        }
 
-function updateStatus(idx, status) {
-let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-const comment = document.getElementById(comm_${idx}`).value;
-list[idx].status = status;
-list[idx].comment = comment;
-localStorage.setItem('infinityReports', JSON.stringify(list));
-alert('Status Updated to ' + status);
-loadAdminList();
-loadPublicFeed();
-}
+        if (list.length === 0) {
+            feedList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">No complaints found.</p>';
+            return;
+        }
 
-function deleteReport(idx) {
-let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-list.splice(idx, 1);
-localStorage.setItem('infinityReports', JSON.stringify(list));
-loadAdminList();
-loadPublicFeed();
-}
+        list.slice().reverse().forEach(r => {
+            let badgeClass = r.status === 'Reviewed' ? 'badge-reviewed' : (r.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
+            let div = document.createElement('div');
+            div.className = 'feed-card';
+            div.innerHTML = `
+                <div class="feed-header">
+                    <span>#${r.id} &nbsp; ${r.dateStr}</span>
+                    <span class="badge ${badgeClass}">${r.status}</span>
+                </div>
+                <div style="font-weight:bold; font-size:0.95rem; margin-bottom:4px;">${r.title}</div>
+                <div class="feed-desc">${r.desc}</div>
+                ${r.evidence ? `<a href="${r.evidence}" target="_blank" style="color:#c084fc; font-size:0.85rem; display:inline-block; margin-bottom:5px;">View Evidence Link</a>` : ''}
+                ${r.adminComment ? `<div style="background:rgba(139,92,246,0.2); padding:6px; border-left:3px solid var(--accent-purple); font-size:0.85rem; margin-top:5px;"><strong>Admin Comment:</strong> ${r.adminComment}</div>` : ''}
+            `;
+            feedList.appendChild(div);
+        });
+    }
 
-function clearSiteCache() {
-localStorage.clear();
-alert('Site cache cleared successfully! Reloading...');
-location.reload();
-}
+    function loadAdminReviews() {
+        const reviewList = document.getElementById('adminReviewList');
+        reviewList.innerHTML = '';
+        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
 
-window.onload = function() {
-loadPublicFeed();
-if (localStorage.getItem('adminAuthSession') === 'active') {
-showDash();
-}
-}
+        if (list.length === 0) {
+            reviewList.innerHTML = '<p style="color:var(--text-muted); text-align:center;">No reports to review.</p>';
+            return;
+        }
+
+        list.slice().reverse().forEach((r, idx) => {
+            let realIdx = list.length - 1 - idx;
+            let div = document.createElement('div');
+            div.className = 'feed-card';
+            div.innerHTML = `
+                <div class="feed-header"><span>#${r.id} (${r.status})</span><span>${r.dateStr}</span></div>
+                <div style="font-weight:bold; font-size:0.9rem;">${r.title}</div>
+                <div style="font-size:0.85rem; margin:5px 0;">${r.desc}</div>
+                <input type="text" id="admComm_${realIdx}" class="form-control" value="${r.adminComment || ''}" placeholder="Write admin feedback..." style="margin-bottom:8px; font-size:0.85rem;">
+                <div style="display:flex; gap:6px;">
+                    <button onclick="updateReportStatus(${realIdx}, 'Reviewed')" style="background:#10b981; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Review / Accept</button>
+                    <button onclick="updateReportStatus(${realIdx}, 'Rejected')" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Reject</button>
+                    <button onclick="deleteReport(${realIdx})" style="background:#475569; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Delete</button>
+                </div>
+            `;
+            reviewList.appendChild(div);
+        });
+    }
+
+    function updateReportStatus(idx, status) {
+        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        const comment = document.getElementById(`admComm_${idx}`).value;
+        list[idx].status = status;
+        list[idx].adminComment = comment;
+        localStorage.setItem('infinityReports', JSON.stringify(list));
+        alert('Complaint status updated successfully!');
+        loadAdminReviews();
+    }
+
+    function deleteReport(idx) {
+        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        list.splice(idx, 1);
+        localStorage.setItem('infinityReports', JSON.stringify(list));
+        loadAdminReviews();
+    }
 </script>
 
 </body>
