@@ -278,7 +278,7 @@
                 </div>
 
                 <div id="tabFeed" class="hidden">
-                    <h3 id="feedTitle" style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">All Complaints (Public Feed)</h3>
+                    <h3 id="feedTitle" style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">Public Complaints Feed</h3>
                     <div id="complaintsFeedList"></div>
                 </div>
             </div>
@@ -321,7 +321,7 @@
     </div>
 
     <div id="adminView" class="hidden">
-        <div class="content-panel" style="max-width: 480px; margin: 0 auto;">
+        <div class="content-panel" style="max-width: 520px; margin: 0 auto;">
             <div id="adminLoginForm">
                 <h3 style="margin-bottom: 12px; color: var(--accent-yellow);">Admin Login</h3>
                 <div class="form-group">
@@ -337,10 +337,21 @@
 
             <div id="adminDashboard" class="hidden">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <h3 style="color: var(--accent-yellow); font-size: 1.05rem;">Admin Review Dashboard</h3>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="switchAdminTab('reviews')" id="btnTabReviews" style="background:var(--accent-purple); color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Reviews</button>
+                        <button onclick="switchAdminTab('logs')" id="btnTabLogs" class="hidden" style="background:#475569; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Audit Logs</button>
+                    </div>
                     <button onclick="adminLogout()" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Logout</button>
                 </div>
-                <div id="adminReviewList"></div>
+                
+                <div id="adminReviewsArea">
+                    <div id="adminReviewList"></div>
+                </div>
+
+                <div id="adminLogsArea" class="hidden">
+                    <h4 style="color: var(--accent-yellow); font-size: 0.95rem; margin-bottom: 10px;">Security Audit Logs (Rakib Only)</h4>
+                    <div id="adminLogsList"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -377,11 +388,38 @@
             if (localStorage.getItem('isAdminLoggedIn') === 'true') {
                 document.getElementById('adminLoginForm').classList.add('hidden');
                 document.getElementById('adminDashboard').classList.remove('hidden');
+                checkRakibLogAccess();
                 loadAdminReviews();
             } else {
                 document.getElementById('adminLoginForm').classList.remove('hidden');
                 document.getElementById('adminDashboard').classList.add('hidden');
             }
+        }
+    }
+
+    function checkRakibLogAccess() {
+        const email = localStorage.getItem('currentAdminEmail') || '';
+        const logsBtn = document.getElementById('btnTabLogs');
+        if (email === 'rakibbot592@gmail.com') {
+            logsBtn.classList.remove('hidden');
+        } else {
+            logsBtn.classList.add('hidden');
+        }
+    }
+
+    function switchAdminTab(tab) {
+        if (tab === 'reviews') {
+            document.getElementById('adminReviewsArea').classList.remove('hidden');
+            document.getElementById('adminLogsArea').classList.add('hidden');
+            document.getElementById('btnTabReviews').style.background = 'var(--accent-purple)';
+            document.getElementById('btnTabLogs').style.background = '#475569';
+            loadAdminReviews();
+        } else {
+            document.getElementById('adminReviewsArea').classList.add('hidden');
+            document.getElementById('adminLogsArea').classList.remove('hidden');
+            document.getElementById('btnTabLogs').style.background = 'var(--accent-purple)';
+            document.getElementById('btnTabReviews').style.background = '#475569';
+            loadAuditLogs();
         }
     }
 
@@ -393,7 +431,8 @@
             localStorage.setItem('currentAdminEmail', email);
             document.getElementById('adminLoginForm').classList.add('hidden');
             document.getElementById('adminDashboard').classList.remove('hidden');
-            loadAdminReviews();
+            checkRakibLogAccess();
+            switchAdminTab('reviews');
         } else {
             alert('Invalid Admin Gmail or Password!');
         }
@@ -404,6 +443,20 @@
         localStorage.removeItem('currentAdminEmail');
         document.getElementById('adminDashboard').classList.add('hidden');
         document.getElementById('adminLoginForm').classList.remove('hidden');
+    }
+
+    function logAction(actionDesc) {
+        let logs = JSON.parse(localStorage.getItem('infinityAuditLogs')) || [];
+        const now = new Date();
+        const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+        const currentEmail = localStorage.getItem('currentAdminEmail') || 'Unknown';
+
+        logs.push({
+            time: timeStr,
+            adminEmail: currentEmail,
+            action: actionDesc
+        });
+        localStorage.setItem('infinityAuditLogs', JSON.stringify(logs));
     }
 
     function openFactionCommands(factionName) {
@@ -508,14 +561,12 @@
         let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
         const now = Date.now();
 
-        // Remove only if reviewed and more than 24 hours have passed since review
         list = list.filter(r => {
             if (r.status !== 'Not Reviewed' && r.reviewedTime > 0) {
                 return (now - r.reviewedTime) < 86400000;
             }
-            return true; // Keep unreviewed complaints visible indefinitely until reviewed
+            return true;
         });
-        localStorage.setItem('infinityReports', JSON.stringify(list));
 
         if (filter === 'not_reviewed') {
             list = list.filter(r => r.status === 'Not Reviewed');
@@ -613,22 +664,68 @@
 
         const commentInput = document.getElementById(`admComm_${idx}`);
         const comment = commentInput ? commentInput.value : '';
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
+
+        // Dynamic Admin Name Assignment based on logged in Gmail
+        let adminName = "Infinity_Rakib";
+        if (currentEmail === "hackonlyuse1@gmail.com") {
+            adminName = "Levi_Ackerman";
+        } else if (currentEmail === "knavil400@gmail.com") {
+            adminName = "Nate_Harrison";
+        }
 
         list[idx].status = status;
         list[idx].adminComment = comment;
-        list[idx].reviewedBy = "Nate_Harrison";
+        list[idx].reviewedBy = adminName;
         list[idx].reviewedTime = Date.now();
 
         localStorage.setItem('infinityReports', JSON.stringify(list));
+        
+        // Log to Audit Log
+        logAction(`Complaint ${list[idx].idStr} was marked as '${status}' by ${adminName}.`);
+
         alert('Complaint status successfully locked as ' + status + '!');
         loadAdminReviews();
     }
 
     function deleteReport(idx) {
         let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        let deletedId = list[idx].idStr;
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
+        
+        let adminName = currentEmail === "hackonlyuse1@gmail.com" ? "Levi_Ackerman" : (currentEmail === "knavil400@gmail.com" ? "Nate_Harrison" : "Infinity_Rakib");
+
+        // Log to Audit Log before deleting
+        logAction(`Complaint ${deletedId} was DELETED by ${adminName}.`);
+
         list.splice(idx, 1);
         localStorage.setItem('infinityReports', JSON.stringify(list));
+        alert('Complaint deleted successfully!');
         loadAdminReviews();
+    }
+
+    function loadAuditLogs() {
+        const logsList = document.getElementById('adminLogsList');
+        logsList.innerHTML = '';
+        let logs = JSON.parse(localStorage.getItem('infinityAuditLogs')) || [];
+
+        if (logs.length === 0) {
+            logsList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:15px;">No audit logs recorded yet.</p>';
+            return;
+        }
+
+        logs.slice().reverse().forEach(log => {
+            let div = document.createElement('div');
+            div.className = 'feed-card';
+            div.innerHTML = `
+                <div class="feed-header">
+                    <span>Admin: ${log.adminEmail}</span>
+                    <span style="color:var(--accent-yellow);">${log.time}</span>
+                </div>
+                <div style="font-size:0.88rem; color:var(--text-main); margin-top:4px;">${log.action}</div>
+            `;
+            logsList.appendChild(div);
+        });
     }
 </script>
 
