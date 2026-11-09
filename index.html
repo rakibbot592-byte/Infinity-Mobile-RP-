@@ -37,10 +37,8 @@
             border: 1px solid var(--border-color);
             margin-bottom: 15px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            position: relative;
-            z-index: 100;
         }
-        .header-title { font-size: 0.88rem; font-weight: bold; color: #fff; white-space: nowrap; }
+        .header-title { font-size: 0.85rem; font-weight: bold; color: #fff; white-space: nowrap; }
         .header-menu { 
             display: flex; 
             gap: 5px; 
@@ -63,21 +61,7 @@
             white-space: nowrap; 
         }
         .nav-link.active { color: #fff; background: rgba(147, 51, 234, 0.5); border: 1px solid var(--accent-purple); }
-        
-        /* Three-dot menu dropdown */
-        .menu-dropdown { position: relative; display: inline-block; flex-shrink: 0; }
-        .dot-btn { background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; padding: 0 5px; }
-        .dropdown-content {
-            display: none; position: absolute; right: 0; top: 100%; background: #1e1b4b;
-            min-width: 150px; box-shadow: 0px 8px 16px rgba(0,0,0,0.6);
-            border: 1px solid var(--accent-purple); border-radius: 8px; z-index: 1000;
-        }
-        .dropdown-content button {
-            color: white; padding: 10px 14px; display: block;
-            background: none; border: none; width: 100%; text-align: left; cursor: pointer; font-size: 0.85rem;
-        }
-        .dropdown-content button:hover { background: rgba(147, 51, 234, 0.4); }
-        .show { display: block; }
+        .nav-link.admin-nav { color: var(--accent-yellow); border: 1px dashed var(--accent-yellow); }
 
         /* Hero & Game Info Section */
         .hero-section {
@@ -223,21 +207,14 @@
 <body>
 
 <div class="container">
-    <!-- Top Header -->
+    <!-- Top Header with Direct Slideable Admin Panel Button -->
     <div class="top-header">
         <div class="header-title">INFINITY MOBILE RP</div>
         <div class="header-menu">
             <button class="nav-link active" onclick="switchView('portal')">HOME</button>
             <button class="nav-link" onclick="switchView('complaints')">COMPLAINTS</button>
             <button class="nav-link" onclick="switchView('commands')">COMMANDS</button>
-            
-            <!-- Three Dot Admin Menu -->
-            <div class="menu-dropdown">
-                <button class="dot-btn" onclick="toggleDropdown(event)">⋮</button>
-                <div id="myDropdown" class="dropdown-content">
-                    <button onclick="openAdminLogin()">Admin Panel</button>
-                </div>
-            </div>
+            <button class="nav-link admin-nav" onclick="switchView('admin')">ADMIN PANEL</button>
         </div>
     </div>
 
@@ -358,8 +335,8 @@
         </div>
     </div>
 
-    <!-- Admin Login / Dashboard Modal View -->
-    <div id="adminView" class="hidden" style="margin-top: 15px;">
+    <!-- Admin Panel View -->
+    <div id="adminView" class="hidden">
         <div class="content-panel" style="max-width: 480px; margin: 0 auto;">
             <div id="adminLoginForm">
                 <h3 style="margin-bottom: 12px; color: var(--accent-yellow);">Admin Login</h3>
@@ -410,36 +387,17 @@
             document.getElementById('commandsView').classList.remove('hidden');
             event.target.classList.add('active');
             backToFactions();
-        }
-    }
-
-    function toggleDropdown(event) {
-        event.stopPropagation();
-        document.getElementById("myDropdown").classList.toggle("show");
-    }
-
-    window.onclick = function(event) {
-        if (!event.target.matches('.dot-btn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            for (let i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
+        } else if (view === 'admin') {
+            document.getElementById('adminView').classList.remove('hidden');
+            event.target.classList.add('active');
+            if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+                document.getElementById('adminLoginForm').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                loadAdminReviews();
+            } else {
+                document.getElementById('adminLoginForm').classList.remove('hidden');
+                document.getElementById('adminDashboard').classList.add('hidden');
             }
-        }
-    }
-
-    function openAdminLogin() {
-        document.getElementById('myDropdown').classList.remove('show');
-        document.getElementById('portalView').classList.add('hidden');
-        document.getElementById('complaintsView').classList.add('hidden');
-        document.getElementById('commandsView').classList.add('hidden');
-        document.getElementById('adminView').classList.remove('hidden');
-        if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-            document.getElementById('adminLoginForm').classList.add('hidden');
-            document.getElementById('adminDashboard').classList.remove('hidden');
-            loadAdminReviews();
         }
     }
 
