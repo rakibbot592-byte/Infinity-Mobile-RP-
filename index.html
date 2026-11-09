@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infinity Mobile RP</title>
+    <!-- Firebase SDK Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         :root {
             --card-bg: rgba(15, 12, 35, 0.9);
@@ -358,19 +361,31 @@
 </div>
 
 <script>
+    // Configured with your exact Firebase Project Details
+    const firebaseConfig = {
+        apiKey: "AIzaSyDjGWh8BmfAEBhiQALXOSIZTnDaDcYdVeY",
+        authDomain: "infinity-mobile-rp-71de0.firebaseapp.com",
+        databaseURL: "https://infinity-mobile-rp-71de0-default-rtdb.firebaseio.com",
+        projectId: "infinity-mobile-rp-71de0",
+        storageBucket: "infinity-mobile-rp-71de0.firebasestorage.app",
+        messagingSenderId: "186446468379",
+        appId: "1:186446468379:web:275feda5b78ae0f1e5efbe"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const reportsRef = database.ref('reports');
+    const logsRef = database.ref('audit_logs');
+    const idCounterRef = database.ref('next_id');
+
     const admins = {
         "rakibbot592@gmail.com": "0507",
         "hackonlyuse1@gmail.com": "Anything",
         "knavil400@gmail.com": "1234"
     };
 
-    // Shared unified storage sync helper
-    function getReports() {
-        return JSON.parse(localStorage.getItem('infinityReports')) || [];
-    }
-    function saveReports(list) {
-        localStorage.setItem('infinityReports', JSON.stringify(list));
-    }
+    let currentFilter = 'all';
 
     function switchView(view, e) {
         document.getElementById('portalView').classList.add('hidden');
@@ -454,17 +469,15 @@
     }
 
     function logAction(actionDesc) {
-        let logs = JSON.parse(localStorage.getItem('infinityAuditLogs')) || [];
         const now = new Date();
         const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
         const currentEmail = localStorage.getItem('currentAdminEmail') || 'Unknown';
 
-        logs.push({
+        logsRef.push({
             time: timeStr,
             adminEmail: currentEmail,
             action: actionDesc
         });
-        localStorage.setItem('infinityAuditLogs', JSON.stringify(logs));
     }
 
     function openFactionCommands(factionName) {
@@ -524,32 +537,33 @@
         }
 
         const processReport = (fileData) => {
-            let list = getReports();
-            let nextNum = parseInt(localStorage.getItem('infinityNextId')) || (list.length + 1);
-            let formattedId = '#' + String(nextNum).padStart(4, '0');
-            localStorage.setItem('infinityNextId', nextNum + 1);
+            idCounterRef.transaction((currentId) => {
+                return (currentId || 0) + 1;
+            }, (error, committed, snapshot) => {
+                let nextNum = snapshot.val() || 1;
+                let formattedId = '#' + String(nextNum).padStart(4, '0');
 
-            let report = {
-                idStr: formattedId,
-                time: Date.now(),
-                dateStr: dateStr,
-                category: category,
-                title: title,
-                desc: desc,
-                evidenceUrl: evidenceUrl,
-                fileData: fileData || '',
-                status: 'Not Reviewed',
-                adminComment: '',
-                reviewedBy: '',
-                reviewedTime: 0
-            };
-
-            list.push(report);
-            saveReports(list);
-
-            alert('Complaint created successfully with ID ' + formattedId + '!');
-            document.getElementById('complaintForm').reset();
-            setCompTab('all');
+                let newReportRef = reportsRef.push();
+                newReportRef.set({
+                    id: newReportRef.key,
+                    idStr: formattedId,
+                    time: Date.now(),
+                    dateStr: dateStr,
+                    category: category,
+                    title: title,
+                    desc: desc,
+                    evidenceUrl: evidenceUrl,
+                    fileData: fileData || '',
+                    status: 'Not Reviewed',
+                    adminComment: '',
+                    reviewedBy: '',
+                    reviewedTime: 0
+                }).then(() => {
+                    alert('Complaint created successfully with ID ' + formattedId + '!');
+                    document.getElementById('complaintForm').reset();
+                    setCompTab('all');
+                });
+            });
         };
 
         if (fileInput.files && fileInput.files[0]) {
@@ -563,20 +577,43 @@
         }
     }
 
+    // Real-time Global Live Sync Listener for Public Feed
+    reportsRef.on('value', (snapshot) => {
+        if (!document.getElementById('tabFeed').classList.contains('hidden')) {
+            renderFeed(snapshot.val(), currentFilter);
+        }
+        if (!document.getElementById('adminReviewsArea').classList.contains('hidden')) {
+            renderAdminReviews(snapshot.val());
+        }
+    });
+
     function loadComplaintsFeed(filter) {
+        currentFilter = filter;
+        reportsRef.once('value').then((snapshot) => {
+            renderFeed(snapshot.val(), filter);
+        });
+    }
+
+    function renderFeed(dataObj, filter) {
         const feedList = document.getElementById('complaintsFeedList');
         feedList.innerHTML = '';
-        let list = getReports();
+        if (!dataObj) {
+            feedList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:15px;">No complaints found.</p>';
+            return;
+        }
+
+        let list = Object.values(dataObj);
         const now = Date.now();
 
-        // Auto-clean only items that were reviewed more than 24 hours ago
         list = list.filter(r => {
             if (r.status !== 'Not Reviewed' && r.reviewedTime > 0) {
-                return (now - r.reviewedTime) < 86400000;
+                if ((now - r.reviewedTime) >= 86400000) {
+                    reportsRef.child(r.id).remove();
+                    return false;
+                }
             }
             return true;
         });
-        saveReports(list);
 
         if (filter === 'not_reviewed') {
             list = list.filter(r => r.status === 'Not Reviewed');
@@ -589,7 +626,7 @@
             return;
         }
 
-        list.slice().reverse().forEach(r => {
+        list.reverse().forEach(r => {
             let badgeClass = r.status === 'Reviewed' ? 'badge-reviewed' : (r.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
             let div = document.createElement('div');
             div.className = 'feed-card';
@@ -618,17 +655,21 @@
     }
 
     function loadAdminReviews() {
+        reportsRef.once('value').then((snapshot) => {
+            renderAdminReviews(snapshot.val());
+        });
+    }
+
+    function renderAdminReviews(dataObj) {
         const reviewList = document.getElementById('adminReviewList');
         reviewList.innerHTML = '';
-        let list = getReports();
-
-        if (list.length === 0) {
+        if (!dataObj) {
             reviewList.innerHTML = '<p style="color:var(--text-muted); text-align:center;">No reports to review.</p>';
             return;
         }
 
-        list.slice().reverse().forEach((r, idx) => {
-            let realIdx = list.length - 1 - idx;
+        let list = Object.values(dataObj);
+        list.reverse().forEach((r) => {
             let div = document.createElement('div');
             div.className = 'feed-card';
 
@@ -645,11 +686,11 @@
                 actionButtons = `<div style="color:#10b981; font-weight:bold; font-size:0.8rem;">Status Locked (${r.status} by ${r.reviewedBy})</div>`;
             } else {
                 actionButtons = `
-                    <input type="text" id="admComm_${realIdx}" class="form-control" placeholder="Write admin feedback..." style="margin-bottom:6px; font-size:0.8rem;">
+                    <input type="text" id="admComm_${r.id}" class="form-control" placeholder="Write admin feedback..." style="margin-bottom:6px; font-size:0.8rem;">
                     <div style="display:flex; gap:5px;">
-                        <button onclick="updateReportStatus(${realIdx}, 'Reviewed')" style="background:#10b981; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Review / Accept</button>
-                        <button onclick="updateReportStatus(${realIdx}, 'Rejected')" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Reject</button>
-                        <button onclick="deleteReport(${realIdx})" style="background:#475569; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem;">Delete</button>
+                        <button onclick="updateReportStatus('${r.id}', '${r.idStr}', 'Reviewed')" style="background:#10b981; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Review / Accept</button>
+                        <button onclick="updateReportStatus('${r.id}', '${r.idStr}', 'Rejected')" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Reject</button>
+                        <button onclick="deleteReport('${r.id}', '${r.idStr}')" style="background:#475569; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem;">Delete</button>
                     </div>
                 `;
             }
@@ -665,14 +706,8 @@
         });
     }
 
-    function updateReportStatus(idx, status) {
-        let list = getReports();
-        if (list[idx].status !== 'Not Reviewed') {
-            alert('This complaint has already been reviewed and is locked!');
-            return;
-        }
-
-        const commentInput = document.getElementById(`admComm_${idx}`);
+    function updateReportStatus(reportKey, idStr, status) {
+        const commentInput = document.getElementById(`admComm_${reportKey}`);
         const comment = commentInput ? commentInput.value : '';
         const currentEmail = localStorage.getItem('currentAdminEmail') || '';
 
@@ -683,54 +718,50 @@
             adminName = "Nate_Harrison";
         }
 
-        list[idx].status = status;
-        list[idx].adminComment = comment;
-        list[idx].reviewedBy = adminName;
-        list[idx].reviewedTime = Date.now();
-
-        saveReports(list);
-        logAction(`Complaint ${list[idx].idStr} was marked as '${status}' by ${adminName}.`);
-
-        alert('Complaint status successfully locked as ' + status + '!');
-        loadAdminReviews();
+        reportsRef.child(reportKey).update({
+            status: status,
+            adminComment: comment,
+            reviewedBy: adminName,
+            reviewedTime: Date.now()
+        }).then(() => {
+            logAction(`Complaint ${idStr} was marked as '${status}' by ${adminName}.`);
+            alert('Complaint status successfully locked as ' + status + '!');
+        });
     }
 
-    function deleteReport(idx) {
-        let list = getReports();
-        let deletedId = list[idx].idStr;
+    function deleteReport(reportKey, idStr) {
         const currentEmail = localStorage.getItem('currentAdminEmail') || '';
-        
         let adminName = currentEmail === "hackonlyuse1@gmail.com" ? "Levi_Ackerman" : (currentEmail === "knavil400@gmail.com" ? "Nate_Harrison" : "Infinity_Rakib");
 
-        logAction(`Complaint ${deletedId} was DELETED by ${adminName}.`);
-
-        list.splice(idx, 1);
-        saveReports(list);
-        alert('Complaint deleted successfully!');
-        loadAdminReviews();
+        logAction(`Complaint ${idStr} was DELETED by ${adminName}.`);
+        reportsRef.child(reportKey).remove().then(() => {
+            alert('Complaint deleted successfully!');
+        });
     }
 
     function loadAuditLogs() {
-        const logsList = document.getElementById('adminLogsList');
-        logsList.innerHTML = '';
-        let logs = JSON.parse(localStorage.getItem('infinityAuditLogs')) || [];
+        logsRef.once('value').then((snapshot) => {
+            const logsList = document.getElementById('adminLogsList');
+            logsList.innerHTML = '';
+            let dataObj = snapshot.val();
+            if (!dataObj) {
+                logsList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:15px;">No audit logs recorded yet.</p>';
+                return;
+            }
 
-        if (logs.length === 0) {
-            logsList.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:15px;">No audit logs recorded yet.</p>';
-            return;
-        }
-
-        logs.slice().reverse().forEach(log => {
-            let div = document.createElement('div');
-            div.className = 'feed-card';
-            div.innerHTML = `
-                <div class="feed-header">
-                    <span>Admin: ${log.adminEmail}</span>
-                    <span style="color:var(--accent-yellow);">${log.time}</span>
-                </div>
-                <div style="font-size:0.88rem; color:var(--text-main); margin-top:4px;">${log.action}</div>
-            `;
-            logsList.appendChild(div);
+            let logs = Object.values(dataObj);
+            logs.reverse().forEach(log => {
+                let div = document.createElement('div');
+                div.className = 'feed-card';
+                div.innerHTML = `
+                    <div class="feed-header">
+                        <span>Admin: ${log.adminEmail}</span>
+                        <span style="color:var(--accent-yellow);">${log.time}</span>
+                    </div>
+                    <div style="font-size:0.88rem; color:var(--text-main); margin-top:4px;">${log.action}</div>
+                `;
+                logsList.appendChild(div);
+            });
         });
     }
 </script>
