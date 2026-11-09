@@ -364,6 +364,14 @@
         "knavil400@gmail.com": "1234"
     };
 
+    // Shared unified storage sync helper
+    function getReports() {
+        return JSON.parse(localStorage.getItem('infinityReports')) || [];
+    }
+    function saveReports(list) {
+        localStorage.setItem('infinityReports', JSON.stringify(list));
+    }
+
     function switchView(view, e) {
         document.getElementById('portalView').classList.add('hidden');
         document.getElementById('complaintsView').classList.add('hidden');
@@ -516,8 +524,8 @@
         }
 
         const processReport = (fileData) => {
-            let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
-            let nextNum = parseInt(localStorage.getItem('infinityNextId')) || 1;
+            let list = getReports();
+            let nextNum = parseInt(localStorage.getItem('infinityNextId')) || (list.length + 1);
             let formattedId = '#' + String(nextNum).padStart(4, '0');
             localStorage.setItem('infinityNextId', nextNum + 1);
 
@@ -537,7 +545,7 @@
             };
 
             list.push(report);
-            localStorage.setItem('infinityReports', JSON.stringify(list));
+            saveReports(list);
 
             alert('Complaint created successfully with ID ' + formattedId + '!');
             document.getElementById('complaintForm').reset();
@@ -558,15 +566,17 @@
     function loadComplaintsFeed(filter) {
         const feedList = document.getElementById('complaintsFeedList');
         feedList.innerHTML = '';
-        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        let list = getReports();
         const now = Date.now();
 
+        // Auto-clean only items that were reviewed more than 24 hours ago
         list = list.filter(r => {
             if (r.status !== 'Not Reviewed' && r.reviewedTime > 0) {
                 return (now - r.reviewedTime) < 86400000;
             }
             return true;
         });
+        saveReports(list);
 
         if (filter === 'not_reviewed') {
             list = list.filter(r => r.status === 'Not Reviewed');
@@ -610,7 +620,7 @@
     function loadAdminReviews() {
         const reviewList = document.getElementById('adminReviewList');
         reviewList.innerHTML = '';
-        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        let list = getReports();
 
         if (list.length === 0) {
             reviewList.innerHTML = '<p style="color:var(--text-muted); text-align:center;">No reports to review.</p>';
@@ -656,7 +666,7 @@
     }
 
     function updateReportStatus(idx, status) {
-        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        let list = getReports();
         if (list[idx].status !== 'Not Reviewed') {
             alert('This complaint has already been reviewed and is locked!');
             return;
@@ -666,7 +676,6 @@
         const comment = commentInput ? commentInput.value : '';
         const currentEmail = localStorage.getItem('currentAdminEmail') || '';
 
-        // Dynamic Admin Name Assignment based on logged in Gmail
         let adminName = "Infinity_Rakib";
         if (currentEmail === "hackonlyuse1@gmail.com") {
             adminName = "Levi_Ackerman";
@@ -679,9 +688,7 @@
         list[idx].reviewedBy = adminName;
         list[idx].reviewedTime = Date.now();
 
-        localStorage.setItem('infinityReports', JSON.stringify(list));
-        
-        // Log to Audit Log
+        saveReports(list);
         logAction(`Complaint ${list[idx].idStr} was marked as '${status}' by ${adminName}.`);
 
         alert('Complaint status successfully locked as ' + status + '!');
@@ -689,17 +696,16 @@
     }
 
     function deleteReport(idx) {
-        let list = JSON.parse(localStorage.getItem('infinityReports')) || [];
+        let list = getReports();
         let deletedId = list[idx].idStr;
         const currentEmail = localStorage.getItem('currentAdminEmail') || '';
         
         let adminName = currentEmail === "hackonlyuse1@gmail.com" ? "Levi_Ackerman" : (currentEmail === "knavil400@gmail.com" ? "Nate_Harrison" : "Infinity_Rakib");
 
-        // Log to Audit Log before deleting
         logAction(`Complaint ${deletedId} was DELETED by ${adminName}.`);
 
         list.splice(idx, 1);
-        localStorage.setItem('infinityReports', JSON.stringify(list));
+        saveReports(list);
         alert('Complaint deleted successfully!');
         loadAdminReviews();
     }
