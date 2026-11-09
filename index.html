@@ -214,17 +214,18 @@
         </div>
     </div>
 
+    <!-- PORTAL VIEW -->
     <div id="portalView">
         <div class="hero-section">
             <div class="game-info">
                 <h3>About Infinity Mobile RP</h3>
                 <p>Welcome to Infinity Mobile RP – the ultimate mobile roleplaying experience. Immerse yourself in a living, breathing virtual world where your choices shape your destiny. Become a dedicated law enforcement officer protecting the streets, join criminal syndicates to build your empire, launch your own business enterprises, own luxurious real estate, achieve ultimate wealth, and live a rich lifestyle with thousands of active players.</p>
             </div>
-
             <a href="https://www.dropbox.com/scl/fi/kygvl9xizmso7cmn1kbvl/Infinity-Mobile-RP.apk?rlkey=78vyq949lt9itvv9cn1dnqest&st=um3ltccj&dl=1" class="download-btn" target="_blank">DOWNLOAD GAME APK</a>
         </div>
     </div>
 
+    <!-- COMPLAINTS VIEW -->
     <div id="complaintsView" class="hidden">
         <div class="complaints-wrapper">
             <div class="sidebar-menu">
@@ -253,12 +254,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Accused Player Nickname (Name_Surname)</label>
-                                <input type="text" id="cTarget" class="form-control" placeholder="e.g. Aman_Choudhary">
+                                <input type="text" id="cTarget" class="form-control" placeholder="e.g. Dipu_Valenta">
                             </div>
                             <div class="form-group">
-                                <label>Violated Rule Points (e.g.2.1)</label>
-                
-                                <input type="text" id="cRules" class="form-control" placeholder="2.1GR">
+                                <label>Violated Rule Points (e.g. 2.1)</label>
+                                <input type="text" id="cRules" class="form-control" placeholder="e.g. 2.1">
                             </div>
                         </div>
 
@@ -268,9 +268,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Evidence: Upload Image/File from Gallery</label>
+                            <label>Evidence: Upload Images from Gallery (Up to 10)</label>
                             <input type="file" id="cFile" class="form-control" accept="image/*" multiple>
-
                         </div>
 
                         <div class="form-group">
@@ -290,6 +289,7 @@
         </div>
     </div>
 
+    <!-- COMMANDS VIEW -->
     <div id="commandsView" class="hidden">
         <div class="content-panel">
             <h3 style="color: var(--accent-yellow); margin-bottom: 12px; font-size: 1.1rem;">Faction Commands Directory</h3>
@@ -325,13 +325,19 @@
         </div>
     </div>
 
+    <!-- ADMIN VIEW -->
     <div id="adminView" class="hidden">
         <div class="content-panel" style="max-width: 520px; margin: 0 auto;">
+            <!-- Gmail & In-Game Name Login Interface -->
             <div id="adminLoginForm">
                 <h3 style="margin-bottom: 12px; color: var(--accent-yellow);">Admin Login</h3>
                 <div class="form-group">
                     <label>Admin Gmail</label>
-                    <input type="email" id="admEmail" class="form-control" placeholder="Enter admin gmail">
+                    <input type="email" id="admEmail" class="form-control" placeholder="Enter your gmail">
+                </div>
+                <div class="form-group">
+                    <label>In-Game Name (Name_Surname)</label>
+                    <input type="text" id="admInGameName" class="form-control" placeholder="e.g. Edward_Rakib">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -340,13 +346,16 @@
                 <button type="button" class="btn-submit" onclick="verifyAdmin()">LOGIN TO DASHBOARD</button>
             </div>
 
+            <!-- Admin Dashboard -->
             <div id="adminDashboard" class="hidden">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <div style="display: flex; gap: 8px;">
-                        <button onclick="switchAdminTab('reviews')" id="btnTabReviews" style="background:var(--accent-purple); color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Reviews</button>
-                        <button onclick="switchAdminTab('logs')" id="btnTabLogs" class="hidden" style="background:#475569; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold;">Audit Logs</button>
+                    <div style="display: flex; gap: 4px; overflow-x: auto; max-width: 80%;">
+                        <button onclick="switchAdminTab('reviews')" id="btnTabReviews" style="background:var(--accent-purple); color:#fff; border:none; padding:4px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">Reviews</button>
+                        <button onclick="switchAdminTab('logs')" id="btnTabLogs" class="hidden" style="background:#475569; color:#fff; border:none; padding:4px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">Logs</button>
+                        <button onclick="switchAdminTab('admins')" id="btnTabAdmins" class="hidden" style="background:#475569; color:#fff; border:none; padding:4px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">Admins</button>
+                        <button onclick="switchAdminTab('bans')" id="btnTabBans" class="hidden" style="background:#475569; color:#fff; border:none; padding:4px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">Bans</button>
                     </div>
-                    <button onclick="adminLogout()" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.8rem;">Logout</button>
+                    <button onclick="adminLogout()" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem;">Logout</button>
                 </div>
                 
                 <div id="adminReviewsArea">
@@ -357,13 +366,35 @@
                     <h4 style="color: var(--accent-yellow); font-size: 0.95rem; margin-bottom: 10px;">Security Audit Logs (Rakib Only)</h4>
                     <div id="adminLogsList"></div>
                 </div>
+
+                <div id="adminAdminsArea" class="hidden">
+                    <h4 style="color: var(--accent-yellow); font-size: 0.95rem; margin-bottom: 10px;">Manage Admins (Rakib Only)</h4>
+                    <div class="form-group">
+                        <label>New Admin Gmail</label>
+                        <input type="email" id="newAdminEmail" class="form-control" placeholder="admin@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>New Admin Password</label>
+                        <input type="password" id="newAdminPass" class="form-control" placeholder="Password">
+                    </div>
+                    <button type="button" class="btn-submit" onclick="addNewAdmin()" style="margin-bottom: 12px;">ADD ADMIN</button>
+                    <div id="adminListContainer"></div>
+                </div>
+
+                <div id="adminBansArea" class="hidden">
+                    <h4 style="color: var(--accent-yellow); font-size: 0.95rem; margin-bottom: 10px;">Manage Banned Gmails (Rakib Only)</h4>
+                    <div style="display:flex; gap:6px; margin-bottom:12px;">
+                        <input type="email" id="banEmailInput" class="form-control" placeholder="Enter gmail to ban">
+                        <button onclick="banGmail()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.8rem;">Ban</button>
+                    </div>
+                    <div id="bannedGmailsList"></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Configured with your exact Firebase Project Details
     const firebaseConfig = {
         apiKey: "AIzaSyDjGWh8BmfAEBhiQALXOSIZTnDaDcYdVeY",
         authDomain: "infinity-mobile-rp-71de0.firebaseapp.com",
@@ -374,14 +405,16 @@
         appId: "1:186446468379:web:275feda5b78ae0f1e5efbe"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     const reportsRef = database.ref('reports');
     const logsRef = database.ref('audit_logs');
+    const bansRef = database.ref('banned_emails');
+    const adminsRef = database.ref('registered_admins');
     const idCounterRef = database.ref('next_id');
 
-    const admins = {
+    // Default built-in admins
+    const defaultAdmins = {
         "rakibbot592@gmail.com": "0507",
         "hackonlyuse1@gmail.com": "Anything",
         "knavil400@gmail.com": "1234"
@@ -413,7 +446,7 @@
             if (localStorage.getItem('isAdminLoggedIn') === 'true') {
                 document.getElementById('adminLoginForm').classList.add('hidden');
                 document.getElementById('adminDashboard').classList.remove('hidden');
-                checkRakibLogAccess();
+                checkRakibSuperAccess();
                 loadAdminReviews();
             } else {
                 document.getElementById('adminLoginForm').classList.remove('hidden');
@@ -422,50 +455,91 @@
         }
     }
 
-    function checkRakibLogAccess() {
+    function checkRakibSuperAccess() {
         const email = localStorage.getItem('currentAdminEmail') || '';
         const logsBtn = document.getElementById('btnTabLogs');
+        const adminsBtn = document.getElementById('btnTabAdmins');
+        const bansBtn = document.getElementById('btnTabBans');
         if (email === 'rakibbot592@gmail.com') {
             logsBtn.classList.remove('hidden');
+            adminsBtn.classList.remove('hidden');
+            bansBtn.classList.remove('hidden');
         } else {
             logsBtn.classList.add('hidden');
+            adminsBtn.classList.add('hidden');
+            bansBtn.classList.add('hidden');
         }
     }
 
     function switchAdminTab(tab) {
+        document.getElementById('adminReviewsArea').classList.add('hidden');
+        document.getElementById('adminLogsArea').classList.add('hidden');
+        document.getElementById('adminAdminsArea').classList.add('hidden');
+        document.getElementById('adminBansArea').classList.add('hidden');
+        document.getElementById('btnTabReviews').style.background = '#475569';
+        document.getElementById('btnTabLogs').style.background = '#475569';
+        document.getElementById('btnTabAdmins').style.background = '#475569';
+        document.getElementById('btnTabBans').style.background = '#475569';
+
         if (tab === 'reviews') {
             document.getElementById('adminReviewsArea').classList.remove('hidden');
-            document.getElementById('adminLogsArea').classList.add('hidden');
             document.getElementById('btnTabReviews').style.background = 'var(--accent-purple)';
-            document.getElementById('btnTabLogs').style.background = '#475569';
             loadAdminReviews();
-        } else {
-            document.getElementById('adminReviewsArea').classList.add('hidden');
+        } else if (tab === 'logs') {
             document.getElementById('adminLogsArea').classList.remove('hidden');
             document.getElementById('btnTabLogs').style.background = 'var(--accent-purple)';
-            document.getElementById('btnTabReviews').style.background = '#475569';
             loadAuditLogs();
+        } else if (tab === 'admins') {
+            document.getElementById('adminAdminsArea').classList.remove('hidden');
+            document.getElementById('btnTabAdmins').style.background = 'var(--accent-purple)';
+            loadRegisteredAdmins();
+        } else if (tab === 'bans') {
+            document.getElementById('adminBansArea').classList.remove('hidden');
+            document.getElementById('btnTabBans').style.background = 'var(--accent-purple)';
+            loadBannedGmails();
         }
     }
 
     function verifyAdmin() {
         const email = document.getElementById('admEmail').value.trim().toLowerCase();
+        const inGameName = document.getElementById('admInGameName').value.trim();
         const pass = document.getElementById('admPass').value;
-        if (admins[email] && admins[email] === pass) {
-            localStorage.setItem('isAdminLoggedIn', 'true');
-            localStorage.setItem('currentAdminEmail', email);
-            document.getElementById('adminLoginForm').classList.add('hidden');
-            document.getElementById('adminDashboard').classList.remove('hidden');
-            checkRakibLogAccess();
-            switchAdminTab('reviews');
-        } else {
-            alert('Invalid Admin Gmail or Password!');
+
+        if (!email || !inGameName) {
+            alert('Please enter both Gmail and In-Game Name!');
+            return;
         }
+
+        bansRef.once('value').then((banSnapshot) => {
+            const bannedData = banSnapshot.val() || {};
+            if (Object.values(bannedData).includes(email)) {
+                alert('Access Denied! This Gmail has been banned by the Super Admin.');
+                return;
+            }
+
+            adminsRef.once('value').then((adminSnapshot) => {
+                let firebaseAdmins = adminSnapshot.val() || {};
+                let allAdmins = { ...defaultAdmins, ...firebaseAdmins };
+
+                if (allAdmins[email] && allAdmins[email] === pass) {
+                    localStorage.setItem('isAdminLoggedIn', 'true');
+                    localStorage.setItem('currentAdminEmail', email);
+                    localStorage.setItem('currentAdminInGameName', inGameName);
+                    document.getElementById('adminLoginForm').classList.add('hidden');
+                    document.getElementById('adminDashboard').classList.remove('hidden');
+                    checkRakibSuperAccess();
+                    switchAdminTab('reviews');
+                } else {
+                    alert('Invalid Admin Gmail or Password!');
+                }
+            });
+        });
     }
 
     function adminLogout() {
         localStorage.removeItem('isAdminLoggedIn');
         localStorage.removeItem('currentAdminEmail');
+        localStorage.removeItem('currentAdminInGameName');
         document.getElementById('adminDashboard').classList.add('hidden');
         document.getElementById('adminLoginForm').classList.remove('hidden');
     }
@@ -479,6 +553,75 @@
             time: timeStr,
             adminEmail: currentEmail,
             action: actionDesc
+        });
+    }
+
+    function addNewAdmin() {
+        const newEmail = document.getElementById('newAdminEmail').value.trim().toLowerCase();
+        const newPass = document.getElementById('newAdminPass').value.trim();
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
+
+        if (currentEmail !== 'rakibbot592@gmail.com') {
+            alert('Permission Denied! Only Rakib can add new admins.');
+            return;
+        }
+
+        if (!newEmail || !newPass) {
+            alert('Please provide both Gmail and Password for the new admin.');
+            return;
+        }
+
+        let adminKey = newEmail.replace(/[.#$\/\[\]]/g, "_");
+        adminsRef.child(adminKey).set({
+            email: newEmail,
+            pass: newPass
+        }).then(() => {
+            logAction(`New admin '${newEmail}' was added by Rakib.`);
+            alert('New admin added successfully!');
+            document.getElementById('newAdminEmail').value = '';
+            document.getElementById('newAdminPass').value = '';
+            loadRegisteredAdmins();
+        });
+    }
+
+    function loadRegisteredAdmins() {
+        adminsRef.once('value').then((snapshot) => {
+            const container = document.getElementById('adminListContainer');
+            container.innerHTML = '';
+            let data = snapshot.val();
+            
+            // Show default admins first
+            let html = `<h5 style="color:var(--text-muted); margin-bottom:6px; font-size:0.85rem;">Default Admins:</h5>`;
+            Object.keys(defaultAdmins).forEach(email => {
+                html += `<div class="feed-card" style="font-size:0.85rem; padding:8px;">${email} (Built-in)</div>`;
+            });
+
+            if (data) {
+                html += `<h5 style="color:var(--text-muted); margin:10px 0 6px 0; font-size:0.85rem;">Custom Added Admins:</h5>`;
+                Object.entries(data).forEach(([key, admin]) => {
+                    html += `
+                        <div class="feed-card" style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; padding:8px;">
+                            <span>${admin.email}</span>
+                            <button onclick="removeAdmin('${key}', '${admin.email}')" style="background:#ef4444; color:#fff; border:none; padding:3px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Remove</button>
+                        </div>
+                    `;
+                });
+            }
+            container.innerHTML = html;
+        });
+    }
+
+    function removeAdmin(key, email) {
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
+        if (currentEmail !== 'rakibbot592@gmail.com') {
+            alert('Permission Denied!');
+            return;
+        }
+
+        adminsRef.child(key).remove().then(() => {
+            logAction(`Admin '${email}' was removed by Rakib.`);
+            alert('Admin removed successfully!');
+            loadRegisteredAdmins();
         });
     }
 
@@ -538,7 +681,7 @@
             title = `From ${author} against ${target} (Rules: ${rules})`;
         }
 
-        const processReport = (fileData) => {
+        const processReportsWithFiles = (fileDataArray) => {
             idCounterRef.transaction((currentId) => {
                 return (currentId || 0) + 1;
             }, (error, committed, snapshot) => {
@@ -555,7 +698,7 @@
                     title: title,
                     desc: desc,
                     evidenceUrl: evidenceUrl,
-                    fileData: fileData || '',
+                    fileDataArray: fileDataArray || [],
                     status: 'Not Reviewed',
                     adminComment: '',
                     reviewedBy: '',
@@ -568,18 +711,27 @@
             });
         };
 
-        if (fileInput.files && fileInput.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(uploadEvent) {
-                processReport(uploadEvent.target.result);
-            };
-            reader.readAsDataURL(fileInput.files[0]);
+        if (fileInput.files && fileInput.files.length > 0) {
+            let files = Array.from(fileInput.files).slice(0, 10);
+            let loadedCount = 0;
+            let base64Images = [];
+
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(uploadEvent) {
+                    base64Images[index] = uploadEvent.target.result;
+                    loadedCount++;
+                    if (loadedCount === files.length) {
+                        processReportsWithFiles(base64Images);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
         } else {
-            processReport('');
+            processReportsWithFiles([]);
         }
     }
 
-    // Real-time Global Live Sync Listener for Public Feed
     reportsRef.on('value', (snapshot) => {
         if (!document.getElementById('tabFeed').classList.contains('hidden')) {
             renderFeed(snapshot.val(), currentFilter);
@@ -637,8 +789,12 @@
             if (r.evidenceUrl) {
                 evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.8rem; display:block; margin-bottom:4px;">View YouTube/URL Evidence</a>`;
             }
-            if (r.fileData) {
-                evidenceHtml += `<div style="margin-top:4px;"><img src="${r.fileData}" style="max-width:100%; height:110px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"></div>`;
+            if (r.fileDataArray && r.fileDataArray.length > 0) {
+                evidenceHtml += `<div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:4px;">`;
+                r.fileDataArray.forEach(img => {
+                    evidenceHtml += `<img src="${img}" style="width:70px; height:70px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);">`;
+                });
+                evidenceHtml += `</div>`;
             }
 
             div.innerHTML = `
@@ -670,7 +826,9 @@
             return;
         }
 
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
         let list = Object.values(dataObj);
+        
         list.reverse().forEach((r) => {
             let div = document.createElement('div');
             div.className = 'feed-card';
@@ -679,13 +837,24 @@
             if (r.evidenceUrl) {
                 evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.8rem; display:block; margin-bottom:4px;">View Evidence Link</a>`;
             }
-            if (r.fileData) {
-                evidenceHtml += `<div style="margin-top:4px;"><img src="${r.fileData}" style="max-width:100%; height:110px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);"></div>`;
+            if (r.fileDataArray && r.fileDataArray.length > 0) {
+                evidenceHtml += `<div style="display:flex; gap:5px; flex-wrap:wrap; margin-top:4px;">`;
+                r.fileDataArray.forEach(img => {
+                    evidenceHtml += `<img src="${img}" style="width:70px; height:70px; object-fit:cover; border-radius:6px; border:1px solid var(--border-color);">`;
+                });
+                evidenceHtml += `</div>`;
             }
 
             let actionButtons = '';
             if (r.status !== 'Not Reviewed') {
-                actionButtons = `<div style="color:#10b981; font-weight:bold; font-size:0.8rem;">Status Locked (${r.status} by ${r.reviewedBy})</div>`;
+                let deleteBtn = '';
+                if (currentEmail === 'rakibbot592@gmail.com') {
+                    deleteBtn = `<button onclick="deleteReport('${r.id}', '${r.idStr}')" style="background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:0.75rem; margin-top:6px;">Delete Reviewed (Rakib Only)</button>`;
+                }
+                actionButtons = `
+                    <div style="color:#10b981; font-weight:bold; font-size:0.8rem;">Status Locked (${r.status} by ${r.reviewedBy})</div>
+                    ${deleteBtn}
+                `;
             } else {
                 actionButtons = `
                     <input type="text" id="admComm_${r.id}" class="form-control" placeholder="Write admin feedback..." style="margin-bottom:6px; font-size:0.8rem;">
@@ -711,33 +880,89 @@
     function updateReportStatus(reportKey, idStr, status) {
         const commentInput = document.getElementById(`admComm_${reportKey}`);
         const comment = commentInput ? commentInput.value : '';
-        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
-
-        let adminName = "Infinity_Rakib";
-        if (currentEmail === "hackonlyuse1@gmail.com") {
-            adminName = "Levi_Ackerman";
-        } else if (currentEmail === "knavil400@gmail.com") {
-            adminName = "Nate_Harrison";
-        }
+        const inGameName = localStorage.getItem('currentAdminInGameName') || 'Admin';
 
         reportsRef.child(reportKey).update({
             status: status,
             adminComment: comment,
-            reviewedBy: adminName,
+            reviewedBy: inGameName,
             reviewedTime: Date.now()
         }).then(() => {
-            logAction(`Complaint ${idStr} was marked as '${status}' by ${adminName}.`);
+            logAction(`Complaint ${idStr} was marked as '${status}' by ${inGameName}.`);
             alert('Complaint status successfully locked as ' + status + '!');
         });
     }
 
     function deleteReport(reportKey, idStr) {
         const currentEmail = localStorage.getItem('currentAdminEmail') || '';
-        let adminName = currentEmail === "hackonlyuse1@gmail.com" ? "Levi_Ackerman" : (currentEmail === "knavil400@gmail.com" ? "Nate_Harrison" : "Infinity_Rakib");
+        const inGameName = localStorage.getItem('currentAdminInGameName') || 'Admin';
 
-        logAction(`Complaint ${idStr} was DELETED by ${adminName}.`);
-        reportsRef.child(reportKey).remove().then(() => {
-            alert('Complaint deleted successfully!');
+        reportsRef.child(reportKey).once('value').then((snapshot) => {
+            let reportData = snapshot.val();
+            if (reportData && reportData.status !== 'Not Reviewed' && currentEmail !== 'rakibbot592@gmail.com') {
+                alert('Permission Denied! Only Rakib can delete already reviewed complaints.');
+                return;
+            }
+
+            logAction(`Complaint ${idStr} was DELETED by ${inGameName}.`);
+            reportsRef.child(reportKey).remove().then(() => {
+                alert('Complaint deleted successfully!');
+            });
+        });
+    }
+
+    function banGmail() {
+        const emailToBan = document.getElementById('banEmailInput').value.trim().toLowerCase();
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
+
+        if (currentEmail !== 'rakibbot592@gmail.com') {
+            alert('Permission Denied! Only Rakib can ban admins.');
+            return;
+        }
+
+        if (!emailToBan) {
+            alert('Please enter a valid Gmail to ban.');
+            return;
+        }
+
+        let newBanRef = bansRef.push();
+        newBanRef.set(emailToBan).then(() => {
+            logAction(`Gmail '${emailToBan}' was BANNED by Rakib.`);
+            alert('Gmail successfully banned!');
+            document.getElementById('banEmailInput').value = '';
+            loadBannedGmails();
+        });
+    }
+
+    function loadBannedGmails() {
+        bansRef.once('value').then((snapshot) => {
+            const listDiv = document.getElementById('bannedGmailsList');
+            listDiv.innerHTML = '';
+            let data = snapshot.val();
+            if (!data) {
+                listDiv.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">No banned gmails.</p>';
+                return;
+            }
+
+            Object.entries(data).forEach(([key, email]) => {
+                let div = document.createElement('div');
+                div.className = 'feed-card';
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;">
+                        <span>${email}</span>
+                        <button onclick="unbanGmail('${key}', '${email}')" style="background:#ef4444; color:#fff; border:none; padding:3px 6px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Unban</button>
+                    </div>
+                `;
+                listDiv.appendChild(div);
+            });
+        });
+    }
+
+    function unbanGmail(key, email) {
+        bansRef.child(key).remove().then(() => {
+            logAction(`Gmail '${email}' was UNBANNED by Rakib.`);
+            alert('Gmail unbanned successfully!');
+            loadBannedGmails();
         });
     }
 
