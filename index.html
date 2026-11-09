@@ -209,6 +209,18 @@
         .modal-box {
             background: #120e2e; border: 1px solid var(--border-color); padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center;
         }
+        .copy-info-box {
+            background: rgba(11, 15, 25, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            white-space: pre-wrap;
+            color: var(--text-muted);
+            text-align: left;
+            position: relative;
+        }
     </style>
 </head>
 <body>
@@ -264,10 +276,7 @@
 
             <div class="content-panel">
                 <div id="tabCreate">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <h3 style="font-size: 1.05rem; color: var(--accent-yellow);">Create Complaint</h3>
-                        <button onclick="openUserSetupModal()" style="background:var(--accent-purple); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Edit Profile</button>
-                    </div>
+                    <h3 style="font-size: 1.05rem; color: var(--accent-yellow); margin-bottom: 12px;">Create Complaint</h3>
                     <form id="complaintForm" onsubmit="submitComplaint(event)">
                         <div class="form-group">
                             <label>Complaint Type</label>
@@ -374,6 +383,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <div style="display: flex; gap: 4px; overflow-x: auto; max-width: 80%;">
                         <button onclick="switchAdminTab('reviews')" id="btnTabReviews" style="background:var(--accent-purple); color:#fff; border:none; padding:4px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">Reviews</button>
+                        <button onclick="switchAdminTab('info')" id="btnTabInfo" style="background:#475569; color:#fff; border:none; padding:4px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">Info</button>
                         <button onclick="switchAdminTab('logs')" id="btnTabLogs" class="hidden" style="background:#475569; color:#fff; border:none; padding:4px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">Logs</button>
                         <button onclick="switchAdminTab('admins')" id="btnTabAdmins" class="hidden" style="background:#475569; color:#fff; border:none; padding:4px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">Admins</button>
                         <button onclick="switchAdminTab('bans')" id="btnTabBans" class="hidden" style="background:#475569; color:#fff; border:none; padding:4px 6px; border-radius:4px; cursor:pointer; font-size:0.7rem; font-weight:bold;">Bans</button>
@@ -383,6 +393,88 @@
                 
                 <div id="adminReviewsArea">
                     <div id="adminReviewList"></div>
+                </div>
+
+                <!-- INFORMATION TAB (Copyable Response Templates) -->
+                <div id="adminInfoArea" class="hidden">
+                    <h4 style="color: var(--accent-yellow); font-size: 0.95rem; margin-bottom: 10px;">Response Templates (Click to Copy)</h4>
+                    
+                    <div class="copy-info-box" onclick="copyTemplateText(this)">
+**1. Complaint Accepted**
+Dear [Complainant Name],
+Thank you for your complaint #compnumber. After a thorough review of the provided evidence, we have confirmed that [Voilator Name] violated server rules. Appropriate action has been taken against the player.
+Punishment: 
+Rule: 
+Duration: 
+We are committed to maintaining a fair and respectful gaming environment, and your report helps us achieve that. We appreciate your vigilance and contribution to the community.
+Best regards,
+Infinity Mobile Administration</div>
+
+                    <div class="copy-info-box" onclick="copyTemplateText(this)">
+**2. Complaint Rejected**
+Dear [Complainant Name],
+Thank you for your complaint #compnumber. We have carefully reviewed the reported situation involving [Voilator] and completed our investigation. After reviewing the case, we have determined that no server rule violation occurred. Therefore, no action will be taken against the reported player, and this complaint has been closed as rejected.
+Best regards,
+Infinity Mobile Administration</div>
+
+                    <div class="copy-info-box" onclick="copyTemplateText(this)">
+**3. Complaint Rejected – Lack of Evidence**
+Dear [Complainant Name], 
+Thank you for your complaint #compnumber. After carefully reviewing the provided report and evidence regarding [Voilator], we were unable to verify the reported violation. Due to insufficient evidence, this complaint has been closed and rejected without further action.
+Best regards,
+Infinity Mobile Administration</div>
+
+                    <div class="copy-info-box" onclick="copyTemplateText(this)">
+**4. Complaint Rejected – Kindly Provide Video Link**
+Dear [Complainant Name],
+Thank you for your complaint #compnumber. After reviewing the submitted evidence, we were unable to verify the reported violation. Kindly provide a valid video link showing the complete incident so that we can investigate the matter properly.
+Best regards,
+Infinity Mobile Administration</div>
+
+                    <div class="copy-info-box" onclick="copyTemplateText(this)">
+**5. Complaint Rejected – Already Action Taken**
+Dear [Complainant Name],
+Thank you for your complaint #compnumber. We have reviewed your report and confirmed that appropriate action has already been taken against the reported player for this incident. As the necessary punishment has already been issued, no further action will be taken.
+Best regards,
+Infinity Mobile Administration</div>
+
+                    <div class="copy-info-box" onclick="copyTemplateText(this)">
+**6. Complaint Rejected – File a Correct Complaint**
+Dear [Complainant Name],
+Thank you for your complaint #compnumber. We were unable to proceed with the investigation because the complaint contains incorrect or insufficient information. Kindly file a new complaint with the correct details and appropriate evidence.
+Best regards,
+Infinity Mobile Administration</div>
+
+                    <div class="copy-info-box" onclick="copyTemplateText(this)">
+**7. Complaint Rejected – Provide More Screenshots/Video**
+Dear [Complainant Name],
+Thank you for your complaint #compnumber. The submitted evidence is insufficient for us to verify the reported violation. Kindly provide additional screenshots or a complete video showing the entire incident, then submit a new complaint.
+Best regards,
+Infinity Mobile Administration</div>
+
+                    <div class="copy-info-box" onclick="copyTemplateText(this)">
+**8. Go to Discord for Complaint**
+Dear [Complainant Name],
+Thank you for your complaint #compnumber. After reviewing your submission, we have determined that this specific issue needs to be handled directly through our official Discord server rather than the forum section.
+• Reason: Issue must be reported via Discord
+• Current Status: Rejected 
+Best regards,
+Infinity Mobile Administration</div>
+
+                    <div class="copy-info-box" onclick="copyTemplateText(this)">
+**9. No Violations**
+Dear [Complainant Name], Complaint #compnumber has been reviewed. Based on the available evidence, no violations of the rules by [Voilator] have been identified. No administrative action will be taken.
+Best Regards, 
+Infinity Mobile Administration</div>
+
+                    <div class="copy-info-box" onclick="copyTemplateText(this)">
+**10. Duplicate Complaint**
+Dear [Complainant Name],
+Thank you for your complaint #compnumber. After reviewing the forum, we found that this incident has already been reported and is currently being handled or has already been resolved in another thread.
+• Reason: Duplicate thread submission Current Status: Rejected
+Best regards,
+Infinity Mobile Administration</div>
+
                 </div>
 
                 <div id="adminLogsArea" class="hidden">
@@ -444,10 +536,11 @@
 
     let currentFilter = 'all';
 
-    function openUserSetupModal() {
-        document.getElementById('modalUserEmail').value = localStorage.getItem('userEmail') || '';
-        document.getElementById('modalUserInGame').value = localStorage.getItem('userInGameName') || '';
-        document.getElementById('userSetupModal').classList.remove('hidden');
+    function copyTemplateText(element) {
+        let text = element.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Template copied to clipboard!');
+        });
     }
 
     function saveAndProcessComplaint() {
@@ -470,7 +563,6 @@
             localStorage.setItem('userInGameName', inGame);
             document.getElementById('userSetupModal').classList.add('hidden');
             
-            // Now execute actual complaint submission with preserved form data
             processAndUploadComplaint();
         });
     }
@@ -526,10 +618,13 @@
 
     function switchAdminTab(tab) {
         document.getElementById('adminReviewsArea').classList.add('hidden');
+        document.getElementById('adminInfoArea').classList.add('hidden');
         document.getElementById('adminLogsArea').classList.add('hidden');
         document.getElementById('adminAdminsArea').classList.add('hidden');
         document.getElementById('adminBansArea').classList.add('hidden');
+        
         document.getElementById('btnTabReviews').style.background = '#475569';
+        document.getElementById('btnTabInfo').style.background = '#475569';
         document.getElementById('btnTabLogs').style.background = '#475569';
         document.getElementById('btnTabAdmins').style.background = '#475569';
         document.getElementById('btnTabBans').style.background = '#475569';
@@ -538,6 +633,9 @@
             document.getElementById('adminReviewsArea').classList.remove('hidden');
             document.getElementById('btnTabReviews').style.background = 'var(--accent-purple)';
             loadAdminReviews();
+        } else if (tab === 'info') {
+            document.getElementById('adminInfoArea').classList.remove('hidden');
+            document.getElementById('btnTabInfo').style.background = 'var(--accent-purple)';
         } else if (tab === 'logs') {
             document.getElementById('adminLogsArea').classList.remove('hidden');
             document.getElementById('btnTabLogs').style.background = 'var(--accent-purple)';
@@ -666,11 +764,14 @@
             return;
         }
 
-        adminsRef.child(key).remove().then(() => {
-            logAction(`Admin '${email}' was removed by Rakib.`);
-            alert('Admin removed successfully!');
-            loadRegisteredAdmins();
-        });
+        let confirmRemove = confirm(`Are you sure you want to remove admin: ${email}?`);
+        if (confirmRemove) {
+            adminsRef.child(key).remove().then(() => {
+                logAction(`Admin '${email}' was removed by Rakib.`);
+                alert('Admin removed successfully!');
+                loadRegisteredAdmins();
+            });
+        }
     }
 
     function openFactionCommands(factionName) {
@@ -715,9 +816,10 @@
         let userEmail = localStorage.getItem('userEmail');
         let userInGame = localStorage.getItem('userInGameName');
 
-        // If profile is not saved yet, open modal and PRESERVE all form fields
         if (!userEmail || !userInGame) {
-            openUserSetupModal();
+            document.getElementById('modalUserEmail').value = '';
+            document.getElementById('modalUserInGame').value = '';
+            document.getElementById('userSetupModal').classList.remove('hidden');
             return;
         }
 
@@ -881,7 +983,7 @@
                 <div class="feed-desc">${r.desc}</div>
                 ${evidenceHtml}
                 ${r.reviewedBy ? `<div style="font-size:0.78rem; color:var(--accent-yellow); margin-top:4px;">Reviewed By: <strong>${r.reviewedBy}</strong></div>` : ''}
-                ${r.adminComment ? `<div style="background:rgba(147,51,234,0.25); padding:5px; border-left:3px solid var(--accent-purple); font-size:0.8rem; margin-top:4px;"><strong>Admin Comment:</strong> ${r.adminComment}</div>` : ''}
+                ${r.adminComment ? `<div style="background:rgba(147,51,234,0.25); padding:5px; border-left:3px solid var(--accent-purple); font-size:0.8rem; margin-top:4px;"><strong>Admin Comment:</strong> <span style="white-space: pre-wrap;">${r.adminComment}</span></div>` : ''}
             `;
             feedList.appendChild(div);
         });
@@ -953,7 +1055,7 @@
                 `;
             } else {
                 actionButtons = `
-                    <input type="text" id="admComm_${r.id}" class="form-control" placeholder="Write admin feedback..." style="margin-bottom:6px; font-size:0.8rem;">
+                    <textarea id="admComm_${r.id}" class="form-control" placeholder="Write admin feedback (support multi-line Enter)..." style="margin-bottom:6px; font-size:0.8rem; height:80px; resize:vertical;"></textarea>
                     <div style="display:flex; gap:5px;">
                         <button onclick="updateReportStatus('${r.id}', '${r.idStr}', 'Reviewed')" style="background:#10b981; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Review / Accept</button>
                         <button onclick="updateReportStatus('${r.id}', '${r.idStr}', 'Rejected')" style="background:#ef4444; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.75rem; font-weight:bold;">Reject</button>
