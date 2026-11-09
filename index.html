@@ -186,6 +186,8 @@
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 10px;
+            user-select: none;
+            -webkit-user-select: none;
         }
         .feed-header { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--accent-yellow); margin-bottom: 4px; }
         .feed-desc { font-size: 0.85rem; margin-bottom: 6px; color: var(--text-main); }
@@ -199,9 +201,35 @@
             background: var(--accent-yellow); color: #000; font-weight: bold;
             border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.95rem;
         }
+        
+        /* Modal Popup */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-box {
+            background: #120e2e; border: 1px solid var(--border-color); padding: 20px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center;
+        }
     </style>
 </head>
 <body>
+
+<!-- User Profile Setup Modal (For Complaints) -->
+<div id="userSetupModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <h3 style="color: var(--accent-yellow); margin-bottom: 10px;">Setup Complaint Profile</h3>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">Please enter your Gmail and In-Game Name to submit complaints.</p>
+        <div class="form-group" style="text-align: left;">
+            <label>Your Gmail</label>
+            <input type="email" id="modalUserEmail" class="form-control" placeholder="yourgmail@gmail.com">
+        </div>
+        <div class="form-group" style="text-align: left;">
+            <label>In-Game Name (Name_Surname)</label>
+            <input type="text" id="modalUserInGame" class="form-control" placeholder="e.g. Peter_Nikolas">
+        </div>
+        <button type="button" class="btn-submit" onclick="saveUserProfile()">SAVE & CONTINUE</button>
+    </div>
+</div>
 
 <div class="container">
     <div class="top-header">
@@ -237,7 +265,10 @@
 
             <div class="content-panel">
                 <div id="tabCreate">
-                    <h3 style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">Create Complaint</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size: 1.05rem; color: var(--accent-yellow);">Create Complaint</h3>
+                        <button onclick="openUserSetupModal()" style="background:var(--accent-purple); color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem; cursor:pointer;">Change Profile</button>
+                    </div>
                     <form id="complaintForm" onsubmit="submitComplaint(event)">
                         <div class="form-group">
                             <label>Complaint Type</label>
@@ -248,10 +279,6 @@
                         </div>
 
                         <div id="playerFields">
-                            <div class="form-group">
-                                <label>Your In-Game Nickname (Name_Surname)</label>
-                                <input type="text" id="cAuthor" class="form-control" placeholder="e.g. Peter_Nikolas">
-                            </div>
                             <div class="form-group">
                                 <label>Accused Player Nickname (Name_Surname)</label>
                                 <input type="text" id="cTarget" class="form-control" placeholder="e.g. Dipu_Valenta">
@@ -283,6 +310,7 @@
 
                 <div id="tabFeed" class="hidden">
                     <h3 id="feedTitle" style="margin-bottom: 12px; font-size: 1.05rem; color: var(--accent-yellow);">Public Complaints Feed</h3>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">💡 Rakib: Long press on any complaint card to view author's Gmail & ban them.</p>
                     <div id="complaintsFeedList"></div>
                 </div>
             </div>
@@ -328,16 +356,12 @@
     <!-- ADMIN VIEW -->
     <div id="adminView" class="hidden">
         <div class="content-panel" style="max-width: 520px; margin: 0 auto;">
-            <!-- Gmail & In-Game Name Login Interface -->
+            <!-- Gmail Login Interface (No In-game name required) -->
             <div id="adminLoginForm">
                 <h3 style="margin-bottom: 12px; color: var(--accent-yellow);">Admin Login</h3>
                 <div class="form-group">
                     <label>Admin Gmail</label>
                     <input type="email" id="admEmail" class="form-control" placeholder="Enter your gmail">
-                </div>
-                <div class="form-group">
-                    <label>In-Game Name (Name_Surname)</label>
-                    <input type="text" id="admInGameName" class="form-control" placeholder="e.g. Edward_Rakib">
                 </div>
                 <div class="form-group">
                     <label>Password</label>
@@ -413,7 +437,6 @@
     const adminsRef = database.ref('registered_admins');
     const idCounterRef = database.ref('next_id');
 
-    // Default built-in admins
     const defaultAdmins = {
         "rakibbot592@gmail.com": "0507",
         "hackonlyuse1@gmail.com": "Anything",
@@ -421,6 +444,44 @@
     };
 
     let currentFilter = 'all';
+
+    // Check user profile setup on load
+    window.onload = function() {
+        let userEmail = localStorage.getItem('userEmail');
+        let userInGame = localStorage.getItem('userInGameName');
+        if (!userEmail || !userInGame) {
+            document.getElementById('userSetupModal').classList.remove('hidden');
+        }
+    };
+
+    function saveUserProfile() {
+        let email = document.getElementById('modalUserEmail').value.trim().toLowerCase();
+        let inGame = document.getElementById('modalUserInGame').value.trim();
+
+        if (!email || !inGame) {
+            alert('Please fill in both Gmail and In-Game Name!');
+            return;
+        }
+
+        bansRef.once('value').then((snapshot) => {
+            let bannedData = snapshot.val() || {};
+            if (Object.values(bannedData).includes(email)) {
+                alert('This Gmail is banned from submitting complaints.');
+                return;
+            }
+
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userInGameName', inGame);
+            document.getElementById('userSetupModal').classList.add('hidden');
+            alert('Profile saved successfully!');
+        });
+    }
+
+    function openUserSetupModal() {
+        document.getElementById('modalUserEmail').value = localStorage.getItem('userEmail') || '';
+        document.getElementById('modalUserInGame').value = localStorage.getItem('userInGameName') || '';
+        document.getElementById('userSetupModal').classList.remove('hidden');
+    }
 
     function switchView(view, e) {
         document.getElementById('portalView').classList.add('hidden');
@@ -436,6 +497,11 @@
         if (view === 'portal') {
             document.getElementById('portalView').classList.remove('hidden');
         } else if (view === 'complaints') {
+            let userEmail = localStorage.getItem('userEmail');
+            let userInGame = localStorage.getItem('userInGameName');
+            if (!userEmail || !userInGame) {
+                document.getElementById('userSetupModal').classList.remove('hidden');
+            }
             document.getElementById('complaintsView').classList.remove('hidden');
             loadComplaintsFeed('all');
         } else if (view === 'commands') {
@@ -502,18 +568,17 @@
 
     function verifyAdmin() {
         const email = document.getElementById('admEmail').value.trim().toLowerCase();
-        const inGameName = document.getElementById('admInGameName').value.trim();
         const pass = document.getElementById('admPass').value;
 
-        if (!email || !inGameName) {
-            alert('Please enter both Gmail and In-Game Name!');
+        if (!email) {
+            alert('Please enter Admin Gmail!');
             return;
         }
 
         bansRef.once('value').then((banSnapshot) => {
             const bannedData = banSnapshot.val() || {};
             if (Object.values(bannedData).includes(email)) {
-                alert('Access Denied! This Gmail has been banned by the Super Admin.');
+                alert('Access Denied! This Gmail is banned.');
                 return;
             }
 
@@ -524,7 +589,6 @@
                 if (allAdmins[email] && allAdmins[email] === pass) {
                     localStorage.setItem('isAdminLoggedIn', 'true');
                     localStorage.setItem('currentAdminEmail', email);
-                    localStorage.setItem('currentAdminInGameName', inGameName);
                     document.getElementById('adminLoginForm').classList.add('hidden');
                     document.getElementById('adminDashboard').classList.remove('hidden');
                     checkRakibSuperAccess();
@@ -539,7 +603,6 @@
     function adminLogout() {
         localStorage.removeItem('isAdminLoggedIn');
         localStorage.removeItem('currentAdminEmail');
-        localStorage.removeItem('currentAdminInGameName');
         document.getElementById('adminDashboard').classList.add('hidden');
         document.getElementById('adminLoginForm').classList.remove('hidden');
     }
@@ -562,12 +625,12 @@
         const currentEmail = localStorage.getItem('currentAdminEmail') || '';
 
         if (currentEmail !== 'rakibbot592@gmail.com') {
-            alert('Permission Denied! Only Rakib can add new admins.');
+            alert('Permission Denied!');
             return;
         }
 
         if (!newEmail || !newPass) {
-            alert('Please provide both Gmail and Password for the new admin.');
+            alert('Please fill all fields.');
             return;
         }
 
@@ -576,8 +639,8 @@
             email: newEmail,
             pass: newPass
         }).then(() => {
-            logAction(`New admin '${newEmail}' was added by Rakib.`);
-            alert('New admin added successfully!');
+            logAction(`New admin '${newEmail}' added.`);
+            alert('Admin added successfully!');
             document.getElementById('newAdminEmail').value = '';
             document.getElementById('newAdminPass').value = '';
             loadRegisteredAdmins();
@@ -589,15 +652,13 @@
             const container = document.getElementById('adminListContainer');
             container.innerHTML = '';
             let data = snapshot.val();
-            
-            // Show default admins first
             let html = `<h5 style="color:var(--text-muted); margin-bottom:6px; font-size:0.85rem;">Default Admins:</h5>`;
             Object.keys(defaultAdmins).forEach(email => {
-                html += `<div class="feed-card" style="font-size:0.85rem; padding:8px;">${email} (Built-in)</div>`;
+                html += `<div class="feed-card" style="font-size:0.85rem; padding:8px;">${email}</div>`;
             });
 
             if (data) {
-                html += `<h5 style="color:var(--text-muted); margin:10px 0 6px 0; font-size:0.85rem;">Custom Added Admins:</h5>`;
+                html += `<h5 style="color:var(--text-muted); margin:10px 0 6px 0; font-size:0.85rem;">Custom Admins:</h5>`;
                 Object.entries(data).forEach(([key, admin]) => {
                     html += `
                         <div class="feed-card" style="display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; padding:8px;">
@@ -612,15 +673,9 @@
     }
 
     function removeAdmin(key, email) {
-        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
-        if (currentEmail !== 'rakibbot592@gmail.com') {
-            alert('Permission Denied!');
-            return;
-        }
-
         adminsRef.child(key).remove().then(() => {
-            logAction(`Admin '${email}' was removed by Rakib.`);
-            alert('Admin removed successfully!');
+            logAction(`Admin '${email}' removed.`);
+            alert('Admin removed!');
             loadRegisteredAdmins();
         });
     }
@@ -664,6 +719,14 @@
 
     function submitComplaint(e) {
         e.preventDefault();
+        let userEmail = localStorage.getItem('userEmail');
+        let userInGame = localStorage.getItem('userInGameName');
+
+        if (!userEmail || !userInGame) {
+            openUserSetupModal();
+            return;
+        }
+
         const category = document.getElementById('compCategory').value;
         const desc = document.getElementById('cDesc').value;
         const evidenceUrl = document.getElementById('cEvidenceUrl').value;
@@ -675,10 +738,9 @@
         if (category === 'technical') {
             title = "Technical Issue Report";
         } else {
-            const author = document.getElementById('cAuthor').value || "Unknown";
             const target = document.getElementById('cTarget').value || "Unknown";
             const rules = document.getElementById('cRules').value || "N/A";
-            title = `From ${author} against ${target} (Rules: ${rules})`;
+            title = `From ${userInGame} against ${target} (Rules: ${rules})`;
         }
 
         const processReportsWithFiles = (fileDataArray) => {
@@ -699,6 +761,8 @@
                     desc: desc,
                     evidenceUrl: evidenceUrl,
                     fileDataArray: fileDataArray || [],
+                    authorEmail: userEmail,
+                    authorName: userInGame,
                     status: 'Not Reviewed',
                     adminComment: '',
                     reviewedBy: '',
@@ -785,6 +849,17 @@
             let div = document.createElement('div');
             div.className = 'feed-card';
             
+            // Long Press Event for Rakib to get author email and ban
+            let pressTimer;
+            div.onmousedown = div.ontouchstart = (e) => {
+                pressTimer = setTimeout(() => {
+                    handleRakibLongPress(r.authorEmail, r.authorName);
+                }, 800); // 800ms long press
+            };
+            div.onmouseup = div.onmouseleave = div.ontouchend = () => {
+                clearTimeout(pressTimer);
+            };
+
             let evidenceHtml = '';
             if (r.evidenceUrl) {
                 evidenceHtml += `<a href="${r.evidenceUrl}" target="_blank" style="color:#c084fc; font-size:0.8rem; display:block; margin-bottom:4px;">View YouTube/URL Evidence</a>`;
@@ -810,6 +885,27 @@
             `;
             feedList.appendChild(div);
         });
+    }
+
+    function handleRakibLongPress(authorEmail, authorName) {
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
+        if (currentEmail !== 'rakibbot592@gmail.com') {
+            return; // Only Rakib can do this
+        }
+
+        if (!authorEmail) {
+            alert('Author email not available for this complaint.');
+            return;
+        }
+
+        let confirmBan = confirm(`[Rakib Super Power]\nAuthor Name: ${authorName}\nAuthor Gmail: ${authorEmail}\n\nDo you want to BAN this user's Gmail?`);
+        if (confirmBan) {
+            let newBanRef = bansRef.push();
+            newBanRef.set(authorEmail).then(() => {
+                logAction(`User Gmail '${authorEmail}' (${authorName}) was BANNED by Rakib via long press.`);
+                alert('User has been banned successfully!');
+            });
+        }
     }
 
     function loadAdminReviews() {
@@ -880,23 +976,28 @@
     function updateReportStatus(reportKey, idStr, status) {
         const commentInput = document.getElementById(`admComm_${reportKey}`);
         const comment = commentInput ? commentInput.value : '';
-        const inGameName = localStorage.getItem('currentAdminInGameName') || 'Admin';
+        const currentEmail = localStorage.getItem('currentAdminEmail') || '';
+
+        let adminName = "Infinity_Rakib";
+        if (currentEmail === "hackonlyuse1@gmail.com") {
+            adminName = "Levi_Ackerman";
+        } else if (currentEmail === "knavil400@gmail.com") {
+            adminName = "Nate_Harrison";
+        }
 
         reportsRef.child(reportKey).update({
             status: status,
             adminComment: comment,
-            reviewedBy: inGameName,
+            reviewedBy: adminName,
             reviewedTime: Date.now()
         }).then(() => {
-            logAction(`Complaint ${idStr} was marked as '${status}' by ${inGameName}.`);
+            logAction(`Complaint ${idStr} was marked as '${status}' by ${adminName}.`);
             alert('Complaint status successfully locked as ' + status + '!');
         });
     }
 
     function deleteReport(reportKey, idStr) {
         const currentEmail = localStorage.getItem('currentAdminEmail') || '';
-        const inGameName = localStorage.getItem('currentAdminInGameName') || 'Admin';
-
         reportsRef.child(reportKey).once('value').then((snapshot) => {
             let reportData = snapshot.val();
             if (reportData && reportData.status !== 'Not Reviewed' && currentEmail !== 'rakibbot592@gmail.com') {
@@ -904,7 +1005,7 @@
                 return;
             }
 
-            logAction(`Complaint ${idStr} was DELETED by ${inGameName}.`);
+            logAction(`Complaint ${idStr} was DELETED.`);
             reportsRef.child(reportKey).remove().then(() => {
                 alert('Complaint deleted successfully!');
             });
@@ -916,7 +1017,7 @@
         const currentEmail = localStorage.getItem('currentAdminEmail') || '';
 
         if (currentEmail !== 'rakibbot592@gmail.com') {
-            alert('Permission Denied! Only Rakib can ban admins.');
+            alert('Permission Denied!');
             return;
         }
 
